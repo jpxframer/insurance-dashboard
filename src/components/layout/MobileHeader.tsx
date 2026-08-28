@@ -17,6 +17,11 @@ import {
 import { NotificationsPanel, unreadCount } from "./NotificationsPanel";
 import { currentUser, greeting, profileMenu, search } from "@/lib/data";
 import { useDismissable } from "@/lib/use-dismissable";
+import { useScrolled } from "@/lib/use-scrolled";
+import { cn } from "@/lib/cn";
+
+/** Height of the fixed bar; the scrolling block below clears it by the same amount. */
+const BAR_H = 72;
 
 const MENU_ICONS = {
   analytics: AnalyticsIcon,
@@ -56,10 +61,20 @@ export function MobileHeader({
     bellRef,
   );
   const profileRef = useDismissable<HTMLDivElement>(profileOpen, closeProfile, avatarRef);
+  const scrolled = useScrolled();
 
   return (
-    <header className="relative z-30 bg-white lg:hidden">
-      <div className="flex items-center justify-between px-5 pb-4 pt-3">
+    <header
+      className={cn(
+        // Fixed like the bottom tab bar, so page content scrolls between them.
+        // The border fades in only once content has slid underneath.
+        "fixed inset-x-0 top-0 z-40 bg-white lg:hidden",
+        "border-b transition-colors duration-200",
+        scrolled ? "border-slate-200" : "border-transparent",
+      )}
+      style={{ height: BAR_H }}
+    >
+      <div className="flex h-full items-center justify-between px-5">
         <Link href="/" className="rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
           <Image
             src="/brand/redpear-logo.svg"
@@ -107,30 +122,13 @@ export function MobileHeader({
         </div>
       </div>
 
-      <div className="px-5 pb-4">
-        <p className="text-[13px] text-slate-400">{greeting.date}</p>
-        <h1 className="mt-1 text-[22px] font-semibold tracking-[-0.02em] text-slate-900">
-          {greeting.salutation}, {currentUser.firstName} 👋
-        </h1>
-
-        <label className="relative mt-4 block">
-          <span className="sr-only">Search</span>
-          <SearchIcon className="pointer-events-none absolute left-4 top-1/2 size-[18px] -translate-y-1/2 text-slate-400" />
-          <input
-            type="search"
-            placeholder={search.mobilePlaceholder}
-            className="h-[52px] w-full rounded-[14px] border border-slate-200 bg-slate-50 pl-12 pr-4 text-[14px] text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:bg-white focus:outline-none"
-          />
-        </label>
-      </div>
-
       {/* Notifications sheet */}
       {notificationsOpen ? (
         <div
           ref={notificationsRef}
           role="dialog"
           aria-label="Notifications"
-          className="absolute inset-x-4 top-[76px] z-40 overflow-hidden rounded-[14px] border border-slate-200 bg-white shadow-[var(--shadow-pop)]"
+          className="absolute inset-x-4 top-[76px] z-40 max-h-[calc(100dvh-96px)] overflow-y-auto overscroll-contain rounded-[14px] border border-slate-200 bg-white shadow-[var(--shadow-pop)]"
         >
           <NotificationsPanel onClose={closeNotifications} />
         </div>
@@ -142,7 +140,7 @@ export function MobileHeader({
           ref={profileRef}
           role="menu"
           aria-label="Account"
-          className="absolute right-4 top-[76px] z-40 w-[250px] overflow-hidden rounded-[14px] border border-slate-200 bg-white shadow-[var(--shadow-pop)]"
+          className="absolute right-4 top-[76px] z-40 w-[250px] max-h-[calc(100dvh-96px)] overflow-y-auto overscroll-contain rounded-[14px] border border-slate-200 bg-white shadow-[var(--shadow-pop)]"
         >
           <div className="flex items-center gap-3 border-b border-slate-100 px-4 py-3.5">
             <Image
@@ -192,5 +190,32 @@ export function MobileHeader({
         </div>
       ) : null}
     </header>
+  );
+}
+
+/**
+ * Greeting and search — mobile only.
+ *
+ * Deliberately outside the fixed bar so it scrolls away with the page; the top
+ * padding clears the bar's height.
+ */
+export function MobileGreeting() {
+  return (
+    <div className="bg-white px-5 pb-4 lg:hidden" style={{ paddingTop: BAR_H }}>
+      <p className="text-[13px] text-slate-400">{greeting.date}</p>
+      <h1 className="mt-1 text-[22px] font-semibold tracking-[-0.02em] text-slate-900">
+        {greeting.salutation}, {currentUser.firstName} 👋
+      </h1>
+
+      <label className="relative mt-4 block">
+        <span className="sr-only">Search</span>
+        <SearchIcon className="pointer-events-none absolute left-4 top-1/2 size-[18px] -translate-y-1/2 text-slate-400" />
+        <input
+          type="search"
+          placeholder={search.mobilePlaceholder}
+          className="h-[52px] w-full rounded-[14px] border border-slate-200 bg-slate-50 pl-12 pr-4 text-[14px] text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:bg-white focus:outline-none"
+        />
+      </label>
+    </div>
   );
 }

@@ -97,6 +97,23 @@ src/
 The seven Phase 1 frames are **three overlay states of one shell** over **one page** — sidebar
 expanded/collapsed, notifications, account menu. Not seven layouts.
 
+## Shell scroll model
+
+Only the page content scrolls; the chrome is pinned at both breakpoints.
+
+- **Desktop sidebar** — `sticky top-0 h-dvh self-start`. `self-start` matters: without it the flex
+  parent stretches the aside to *content* height and `sticky` has nothing to pin. The nav is
+  `min-h-0 flex-1` with the link list `overflow-y-auto`, so on a short viewport the links scroll
+  rather than pushing Settings and the user card off-screen.
+- **Mobile top bar** — `fixed`, 72px (`BAR_H` in `MobileHeader.tsx`). It holds only the logo,
+  bell and avatar. The greeting and search live in `MobileGreeting`, a *separate* export
+  rendered in normal flow with `paddingTop: BAR_H`, so they scroll away while the bar stays.
+  Change `BAR_H` and both move together.
+- **Border on scroll** — `useScrolled()` (`src/lib/use-scrolled.ts`) flips the bar's
+  `border-b` from `border-transparent` to `border-slate-200` past 4px. The border is always
+  present, only its colour animates, so the bar never changes height and content doesn't jump.
+- **Mobile bottom tab bar** — `fixed inset-x-0 bottom-0`; `main` carries `pb-[75px]` to clear it.
+
 ## Gotchas already hit — don't rediscover these
 
 - **Tailwind display conflicts.** `hidden lg:block` on an element whose base classes include

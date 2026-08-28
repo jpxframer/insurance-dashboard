@@ -77,7 +77,9 @@ export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "hidden shrink-0 flex-col border-r border-slate-200 bg-white transition-[width] duration-200 ease-out lg:flex",
+        // Pinned to one viewport height: `self-start` stops the flex parent
+        // stretching it to content height, which would defeat `sticky`.
+        "sticky top-0 hidden h-dvh shrink-0 flex-col self-start overflow-hidden border-r border-slate-200 bg-white transition-[width] duration-200 ease-out lg:flex",
         collapsed ? "w-[79px] px-4 py-4" : "w-[236px] pt-4",
       )}
     >
@@ -125,11 +127,23 @@ export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
         </button>
       ) : null}
 
+      {/*
+        `min-h-0` lets this shrink below its content height, so the links can
+        scroll on a short viewport instead of pushing the user card off-screen.
+      */}
       <nav
         aria-label="Main"
-        className={cn("flex flex-1 flex-col", collapsed ? "mt-4" : "mt-6 px-3")}
+        className={cn(
+          "flex min-h-0 flex-1 flex-col",
+          collapsed ? "mt-4" : "mt-6 px-3",
+        )}
       >
-        <ul className={cn("flex flex-col", collapsed ? "gap-2" : "gap-1")}>
+        <ul
+          className={cn(
+            "flex flex-col overflow-y-auto",
+            collapsed ? "gap-2" : "gap-1",
+          )}
+        >
           {primaryNav.map((item) => (
             <NavLink
               key={item.id}
@@ -142,7 +156,7 @@ export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
 
         <ul
           className={cn(
-            "mt-auto flex flex-col border-t border-slate-100",
+            "mt-auto flex shrink-0 flex-col border-t border-slate-100",
             collapsed ? "gap-2 pt-4" : "gap-1 pt-4",
           )}
         >
@@ -160,7 +174,7 @@ export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
       {/* User card */}
       <div
         className={cn(
-          "flex items-center border-t border-slate-200",
+          "flex shrink-0 items-center border-t border-slate-200",
           collapsed ? "-mx-4 justify-center px-4 py-4" : "gap-3 px-4 py-4",
         )}
       >

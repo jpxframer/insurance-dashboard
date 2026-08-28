@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState, type ReactNode } from "react";
-import { MobileHeader } from "./MobileHeader";
+import { MobileGreeting, MobileHeader } from "./MobileHeader";
 import { MobileTabBar } from "./MobileTabBar";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
@@ -59,6 +59,9 @@ export function DashboardShell({
           onProfileToggle={toggleProfile}
           onProfileClose={closeProfile}
         />
+
+        {/* Scrolls away under the fixed bar above it. */}
+        <MobileGreeting />
 
         <main className="flex-1 pb-[75px] lg:pb-0">{children}</main>
       </div>
