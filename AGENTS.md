@@ -60,6 +60,30 @@ Sidebar 236px expanded / 79px collapsed · top bar 57px · content padding 18/24
 16px. Desktop content grid is 1156px across three columns in a 548 : 279 : 297 ratio; the recent
 claims card spans the first two.
 
+### Overlay components (measured, not eyeballed)
+
+The three overlays have their own component nodes, which carry exact geometry the composed
+frames do not. Built from these, verified in-browser via CDP:
+
+| Node ID       | What                      | Size          | Rendered      |
+| ------------- | ------------------------- | ------------- | ------------- |
+| `20875-30043` | Notifications, desktop    | 314 × 404.52  | 314 × 405.22  |
+| `20875-31146` | Notifications, mobile     | 370 × 404.52  | 370 × 404.81  |
+| `20875-30858` | Account menu, mobile      | 250 × 284     | 250 × 284     |
+
+The two notification nodes are identical apart from width and badge count, so
+`NotificationsPanel` serves both. Details the composed frames hid: the meta line is two fonts
+(time in 11.5px Geist, ref in 11px Geist Mono); read rows drop their body text to `#475569`
+while unread rows keep `#0f172a`; tiles are 34px holding a 15px glyph; the mobile bell and
+avatar are 48px, not 44.
+
+Two rendering notes worth keeping:
+
+- Figma strokes sit *inside* a frame, CSS borders sit *outside* the padding box, so every
+  bordered edge sheds 1px of padding to keep the measured heights.
+- Geist and Geist Mono on one line union their half-leading, making the 15px meta row render
+  at 16px. The margin above it absorbs the difference.
+
 ### Known deviations from the frames
 
 - **Collapsed sidebar has an expand button.** The Figma collapsed frame shows no way back to the

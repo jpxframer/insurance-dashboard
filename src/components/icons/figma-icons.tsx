@@ -82,3 +82,75 @@ export function ChevronsLeftIcon(props: IconProps) {
     </svg>
   );
 }
+
+/**
+ * Account-menu "Profile" glyph (vuesax/linear/profile). Distinct from the
+ * generic UserIcon — this is the instance the Figma menu actually uses.
+ */
+export function ProfileIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path d="M12.16 10.87C12.06 10.86 11.94 10.86 11.83 10.87C9.45 10.79 7.56 8.84 7.56 6.44C7.56 3.99 9.54 2 12 2C14.45 2 16.44 3.99 16.44 6.44C16.43 8.84 14.54 10.79 12.16 10.87Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M7.16 14.56C4.74 16.18 4.74 18.82 7.16 20.43C9.91 22.27 14.42 22.27 17.17 20.43C19.59 18.81 19.59 16.17 17.17 14.56C14.43 12.73 9.92 12.73 7.16 14.56Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+/** Account-menu row chevron. Authored in a 12px box, where the design uses it. */
+export function MenuChevronIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 12 12" fill="none" aria-hidden="true" {...props}>
+      <path d="M4.2857 1.7143L8.5714 6L4.2857 10.2857" stroke="currentColor" strokeWidth="1.37143" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+/** Sign-out glyph, exported at its native 16px box — smaller than the 24px nav icons. */
+export function SignOutIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" {...props}>
+      <path d="M6 14H3.5C3.10218 14 2.72064 13.842 2.43934 13.5607C2.15804 13.2794 2 12.8978 2 12.5V3.5C2 3.10218 2.15804 2.72064 2.43934 2.43934C2.72064 2.15804 3.10218 2 3.5 2H6M10.5 4.5L14 8L10.5 11.5M14 8H6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+/*
+  Notification tile glyphs.
+
+  Authored at their native 15px box rather than scaled down from the 24px nav
+  family — the design draws them with a heavier relative stroke (1.3–1.5 at
+  15px), which a 24px icon shrunk to 15px would render far too thin.
+*/
+export function NotifShieldIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 15 15" fill="none" aria-hidden="true" {...props}>
+      <path d="M7.5 1.40625L12.6562 3.75V7.5C12.6562 10.3125 10.5 12.75 7.5 13.5938C4.5 12.75 2.34375 10.3125 2.34375 7.5V3.75L7.5 1.40625Z" stroke="currentColor" strokeWidth="1.40625" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+export function NotifMailIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 15 15" fill="none" aria-hidden="true" {...props}>
+      <path d="M11.7188 2.8125H3.28125C2.24572 2.8125 1.40625 3.65197 1.40625 4.6875V10.3125C1.40625 11.348 2.24572 12.1875 3.28125 12.1875H11.7188C12.7543 12.1875 13.5938 11.348 13.5938 10.3125V4.6875C13.5938 3.65197 12.7543 2.8125 11.7188 2.8125Z" stroke="currentColor" strokeWidth="1.40625"/>
+      <path d="M1.875 3.75L7.5 8.4375L13.125 3.75" stroke="currentColor" strokeWidth="1.40625" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+export function NotifCheckIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 15 15" fill="none" aria-hidden="true" {...props}>
+      <path d="M2.8125 7.96875L6.09375 11.25L12.1875 4.21875" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+export function NotifClockIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 15 15" fill="none" aria-hidden="true" {...props}>
+      <path d="M7.5 13.125C10.6066 13.125 13.125 10.6066 13.125 7.5C13.125 4.3934 10.6066 1.875 7.5 1.875C4.3934 1.875 1.875 4.3934 1.875 7.5C1.875 10.6066 4.3934 13.125 7.5 13.125Z" stroke="currentColor" strokeWidth="1.3125"/>
+      <path d="M7.5 4.21875V7.5L9.65625 9" stroke="currentColor" strokeWidth="1.3125" strokeLinecap="round"/>
+    </svg>
+  );
+}

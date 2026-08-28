@@ -5,15 +5,12 @@ import Link from "next/link";
 import { useCallback, useRef } from "react";
 import {
   AnalyticsIcon,
+  MenuChevronIcon,
+  ProfileIcon,
   SettingsIcon,
-} from "@/components/icons/figma-icons";
-import {
-  BellIcon,
-  ChevronRightIcon,
-  SearchIcon,
   SignOutIcon,
-  UserIcon,
-} from "@/components/icons/ui-icons";
+} from "@/components/icons/figma-icons";
+import { BellIcon, SearchIcon } from "@/components/icons/ui-icons";
 import { NotificationsPanel, unreadCount } from "./NotificationsPanel";
 import { currentUser, greeting, profileMenu, search } from "@/lib/data";
 import { useDismissable } from "@/lib/use-dismissable";
@@ -26,7 +23,7 @@ const BAR_H = 72;
 const MENU_ICONS = {
   analytics: AnalyticsIcon,
   settings: SettingsIcon,
-  profile: UserIcon,
+  profile: ProfileIcon,
 } as const;
 
 type MobileHeaderProps = {
@@ -94,11 +91,11 @@ export function MobileHeader({
             aria-label={`Notifications, ${unreadCount} unread`}
             aria-expanded={notificationsOpen}
             aria-haspopup="dialog"
-            className="relative grid size-11 place-items-center rounded-[12px] border border-slate-200 text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="relative grid size-12 place-items-center rounded-[12px] border border-slate-200 text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           >
-            <BellIcon className="size-5" />
+            <BellIcon className="size-6" />
             {unreadCount > 0 ? (
-              <span className="absolute right-2.5 top-2.5 size-2.5 rounded-full bg-red-600 ring-2 ring-white" />
+              <span className="absolute right-[11px] top-[9px] size-3 rounded-full bg-red-600 ring-2 ring-white" />
             ) : null}
           </button>
 
@@ -114,9 +111,9 @@ export function MobileHeader({
             <Image
               src={currentUser.avatar}
               alt=""
-              width={44}
-              height={44}
-              className="size-11 rounded-[12px] object-cover"
+              width={48}
+              height={48}
+              className="size-12 rounded-[12px] object-cover"
             />
           </button>
         </div>
@@ -128,7 +125,7 @@ export function MobileHeader({
           ref={notificationsRef}
           role="dialog"
           aria-label="Notifications"
-          className="absolute inset-x-4 top-[76px] z-40 max-h-[calc(100dvh-96px)] overflow-y-auto overscroll-contain rounded-[14px] border border-slate-200 bg-white shadow-[var(--shadow-pop)]"
+          className="absolute inset-x-4 top-full z-40 max-h-[calc(100dvh-96px)] overflow-y-auto overscroll-contain rounded-[14px] border border-slate-200 bg-white shadow-[var(--shadow-pop)]"
         >
           <NotificationsPanel onClose={closeNotifications} />
         </div>
@@ -140,25 +137,27 @@ export function MobileHeader({
           ref={profileRef}
           role="menu"
           aria-label="Account"
-          className="absolute right-4 top-[76px] z-40 w-[250px] max-h-[calc(100dvh-96px)] overflow-y-auto overscroll-contain rounded-[14px] border border-slate-200 bg-white shadow-[var(--shadow-pop)]"
+          className="absolute right-4 top-full z-40 max-h-[calc(100dvh-96px)] w-[250px] overflow-y-auto overscroll-contain rounded-[14px] border border-slate-200 bg-white shadow-[var(--shadow-pop)]"
         >
-          <div className="flex items-center gap-3 border-b border-slate-100 px-4 py-3.5">
+          <div className="flex items-center gap-[10px] border-b border-slate-100 px-[14px] pb-[13px] pt-[13px]">
             <Image
               src={currentUser.avatar}
               alt=""
-              width={40}
-              height={40}
-              className="size-10 rounded-full object-cover"
+              width={36}
+              height={36}
+              className="size-9 rounded-full object-cover"
             />
             <div className="min-w-0">
-              <p className="truncate text-[13.5px] font-semibold text-slate-900">
+              <p className="truncate text-[13.5px] font-semibold leading-[18px] text-slate-900">
                 {currentUser.name}
               </p>
-              <p className="truncate text-[12px] text-slate-400">{currentUser.role}</p>
+              <p className="truncate text-[11.5px] leading-[15px] text-slate-400">
+                {currentUser.role}
+              </p>
             </div>
           </div>
 
-          <ul className="border-b border-slate-100 py-1">
+          <ul className="p-1.5">
             {profileMenu.items.map((item) => {
               const Icon = MENU_ICONS[item.id as keyof typeof MENU_ICONS];
               return (
@@ -167,26 +166,29 @@ export function MobileHeader({
                     href={`/${item.id}`}
                     role="menuitem"
                     onClick={closeProfile}
-                    className="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-700 hover:bg-slate-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"
+                    className="flex min-h-11 items-center gap-[11px] rounded-[9px] px-2.5 py-[13px] text-[14px] font-medium leading-[18px] text-slate-600 hover:bg-slate-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"
                   >
-                    <Icon className="size-5 shrink-0 text-slate-500" />
+                    <Icon className="size-6 shrink-0" />
                     <span className="flex-1">{item.label}</span>
-                    <ChevronRightIcon className="size-4 shrink-0 text-slate-300" />
+                    <MenuChevronIcon className="size-3 shrink-0 text-slate-300" />
                   </Link>
                 </li>
               );
             })}
           </ul>
 
-          <button
-            type="button"
-            role="menuitem"
-            onClick={closeProfile}
-            className="flex w-full items-center gap-3 px-4 py-3.5 text-[14px] font-medium text-red-600 hover:bg-red-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"
-          >
-            <SignOutIcon className="size-5 shrink-0" />
-            {profileMenu.signOutLabel}
-          </button>
+          {/* Sign out is its own bordered section, and its glyph is 16px — not 24. */}
+          <div className="border-t border-slate-100 px-1.5 pb-1.5 pt-1.5">
+            <button
+              type="button"
+              role="menuitem"
+              onClick={closeProfile}
+              className="flex min-h-11 w-full items-center gap-[11px] rounded-[9px] px-2.5 py-[13px] text-[14px] font-medium leading-[18px] text-red-700 hover:bg-red-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"
+            >
+              <SignOutIcon className="size-4 shrink-0" />
+              {profileMenu.signOutLabel}
+            </button>
+          </div>
         </div>
       ) : null}
     </header>

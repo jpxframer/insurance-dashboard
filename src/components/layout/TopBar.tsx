@@ -77,12 +77,14 @@ export function TopBar({
             ) : null}
           </button>
 
+          {/* Frame anchors the panel at y=63 in the 57px bar; the 36px trigger is
+              centred at y=10.5, so 16.5px clears its bottom edge. */}
           {notificationsOpen ? (
             <div
               ref={panelRef}
               role="dialog"
               aria-label="Notifications"
-              className="absolute right-0 top-[calc(100%+10px)] z-40 w-[418px] overflow-hidden rounded-[14px] border border-slate-200 bg-white shadow-[var(--shadow-pop)]"
+              className="absolute right-0 top-[calc(100%+16.5px)] z-40 w-[314px] overflow-hidden rounded-[14px] border border-slate-200 bg-white shadow-[var(--shadow-pop)]"
             >
               <NotificationsPanel onClose={close} />
             </div>
