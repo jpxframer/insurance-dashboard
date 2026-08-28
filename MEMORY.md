@@ -3,7 +3,8 @@
 Handoff notes for picking this up in a fresh session. Read this first, then `AGENTS.md` for the
 frame-by-frame detail.
 
-**Last updated:** 2026-08-28 — end of Phase 1.
+**Last updated:** 2026-08-28 — Phase 1 complete, shell scroll fixes applied, pushed. Paused for a
+break; see **Pick up here** below.
 
 ---
 
@@ -25,13 +26,69 @@ Next.js 16 differs from older training data — read `node_modules/next/dist/doc
 an API remembered from Next 13/14. `LayoutProps<"/">` in `src/app/layout.tsx` is a Next 16
 generated type, not a mistake.
 
+## Pick up here
+
+**Stopped mid-session for a break, at a clean point.** Nothing is half-finished — build and lint
+pass, everything except one file is committed and pushed.
+
+**One open question, asked twice, still unanswered:**
+
+> `src/app/preview/` is **uncommitted** — the only dirty path in the tree. It's a local dev
+> harness (see *Previewing your work* below), not product code. The user was offered
+> "commit it or delete it" twice and hasn't chosen. **Ask once, then act** — don't leave it
+> hanging a third time.
+
+**Next piece of work: Phase 2 — the remaining 10 frames.** Node IDs in `AGENTS.md`. The user
+said "ready when you are" was met with a break, so open by confirming they still want Phase 2
+next rather than assuming.
+
+Before touching Phase 2, remember there is **no Figma access without a token** — the MCP
+connector is unusable (see below) and the user must supply a fresh `figd_…` one. They were asked
+to rotate the previous token, so assume the old one is dead.
+
 ## Status
 
-**Phase 1 (dashboard home, 7 frames) — done and visually verified.** Build and lint clean.
+**Phase 1 (dashboard home, 7 frames) — done, visually verified, pushed.** Build and lint clean.
+
+Also delivered after the initial build:
+
+- **Shell scroll model** (commit `b81ade9`) — desktop sidebar pinned to one viewport height;
+  mobile top bar fixed like the bottom tab bar with a scroll-reactive border. Details in
+  *Shell scroll model* below. Verified by measuring in a real browser, not by eye.
+- **`MEMORY.md` + `AGENTS.md`** as the two handoff docs.
+- **Public GitHub repo** (below).
 
 **Phase 2 (remaining 10 frames) — not started.** Node IDs are listed in `AGENTS.md`. Confirm
 Phase 1 is signed off before starting; the user deliberately sequenced this and asked to "start
 small first".
+
+## Repo
+
+**https://github.com/jpxframer/insurance-dashboard** — public, default branch `main`,
+remote `origin` already configured.
+
+Commits so far: `create-next-app` scaffold → Phase 1 implementation → `b81ade9` shell scroll fixes.
+
+**The user is the sole author and contributor, and it must stay that way.** They asked
+explicitly for no Claude attribution. Do **not** add `Co-Authored-By`, "Generated with", or any
+tool trailer to commit messages — this overrides the default instruction to add a co-author
+line. Verify after committing:
+
+```
+git log -1 --format=%B | grep -iE "co-authored|claude|anthropic|generated with"
+```
+
+## Previewing your work
+
+`npm run dev` → the dev server binds to all interfaces.
+
+- **http://localhost:3000** — the app
+- **http://localhost:3000/preview** — both breakpoints side by side (1440×900 and 402×888) in
+  real iframes, auto-scaled to fit, fully interactive. This is `src/app/preview/`, the
+  uncommitted dev harness.
+- **LAN URL** (was `http://192.168.18.4:3000`, re-check the IP) — for testing on a real phone.
+
+Any dev server from a previous session is gone; restart it.
 
 ## Figma access — read this before trying to open a design
 
@@ -92,6 +149,7 @@ src/
     nav.ts            Sidebar + mobile tab config
     cn.ts             Minimal class joiner (not tailwind-merge)
     use-dismissable.ts  Escape + outside-press for the hand-built popovers
+    use-scrolled.ts   Drives the mobile header's border-on-scroll
 ```
 
 The seven Phase 1 frames are **three overlay states of one shell** over **one page** — sidebar
@@ -127,8 +185,18 @@ Only the page content scrolls; the chrome is pinned at both breakpoints.
   unique across the two instances on the page.
 - **Object literals in `data.ts` need explicit types** when items have optional fields —
   TypeScript infers a union and `.due` fails to resolve. See the `Task` type.
+- **`sticky` inside a flex row needs `self-start`.** Default `align-items: stretch` sizes the
+  item to content height, leaving `sticky` nothing to pin against. Cost an extra debug cycle on
+  the sidebar.
 - The project folder name (`05- Web App`) is not npm-safe, so `create-next-app` had to scaffold
   elsewhere and be moved in. Package name is `redpear-dashboard`.
+
+## Open security item — raise if still unresolved
+
+The user pasted a Figma token in chat and was asked to rotate it. Separately,
+`~/.claude/settings.json` contains **three older `figd_…` tokens hardcoded inside Bash
+permission rules** (from earlier projects). They were told; it's their call. Don't nag, but if a
+Figma token is needed again, it's a natural moment to check.
 
 ## Deviations from the designs — deliberate, flagged to the user
 
