@@ -33,13 +33,13 @@ function NavLink({
         title={collapsed ? item.label : undefined}
         className={cn(
           "group relative flex items-center rounded-[10px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600",
-          collapsed ? "size-[47px] justify-center" : "h-10 gap-3 px-3",
+          collapsed ? "size-[47px] justify-center" : "h-10 gap-4 px-4",
           active
             ? "bg-blue-600 text-white"
             : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
         )}
       >
-        <Icon className="size-5 shrink-0" />
+        <Icon className="size-6 shrink-0" />
 
         {collapsed ? (
           <span className="sr-only">{item.label}</span>
@@ -49,7 +49,7 @@ function NavLink({
             {item.badge ? (
               <span
                 className={cn(
-                  "rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums",
+                  "rounded-full px-2 py-0.5 text-[11px] leading-[14px] font-semibold tabular-nums",
                   active ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500",
                 )}
               >
@@ -74,6 +74,17 @@ function NavLink({
   );
 }
 
+/**
+ * Metrics come from Figma `22783-1847`, the nav's own frame: 40px rows on a
+ * 49px pitch, a 24px glyph at x=16 with its label 40px in, and **Settings
+ * directly under the primary group** behind the rule — not pinned to the foot
+ * of the rail. The dashboard frame `20875-28900` agrees (its pitch is 48 and
+ * Settings sits at y=328), so the bottom-pinned Settings this had before was
+ * simply wrong rather than a disagreement between frames.
+ *
+ * The user card stays at the bottom; `flex-1` on the nav puts the empty space
+ * between Settings and the card, which is where the frame puts it.
+ */
 export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
   return (
     <aside
@@ -134,13 +145,13 @@ export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
         aria-label="Main"
         className={cn(
           "flex min-h-0 flex-1 flex-col",
-          collapsed ? "mt-4" : "mt-6 px-3",
+          collapsed ? "mt-4" : "mt-10 px-3",
         )}
       >
         <ul
           className={cn(
             "flex flex-col overflow-y-auto",
-            collapsed ? "gap-2" : "gap-1",
+            collapsed ? "gap-2" : "gap-[9px]",
           )}
         >
           {primaryNav.map((item) => (
@@ -155,8 +166,8 @@ export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
 
         <ul
           className={cn(
-            "mt-auto flex shrink-0 flex-col border-t border-slate-100",
-            collapsed ? "gap-2 pt-4" : "gap-1 pt-4",
+            "flex shrink-0 flex-col border-t border-slate-100",
+            collapsed ? "mt-4 gap-2 pt-[15px]" : "mt-4 gap-[9px] pt-[15px]",
           )}
         >
           {secondaryNav.map((item) => (
@@ -174,7 +185,7 @@ export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
       <div
         className={cn(
           "flex shrink-0 items-center border-t border-slate-200",
-          collapsed ? "-mx-4 justify-center px-4 py-4" : "gap-3 px-4 py-4",
+          collapsed ? "-mx-4 justify-center px-4 py-[14px]" : "gap-3 px-4 py-[14px]",
         )}
       >
         <Image
@@ -186,10 +197,12 @@ export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
         />
         {!collapsed ? (
           <div className="min-w-0">
-            <p className="truncate text-[13px] font-semibold text-slate-900">
+            <p className="truncate text-[13px] leading-[17px] font-semibold text-slate-900">
               {currentUser.name}
             </p>
-            <p className="truncate text-[12px] text-slate-400">{currentUser.role}</p>
+            <p className="truncate text-[12px] leading-[16px] text-slate-400">
+              {currentUser.role}
+            </p>
           </div>
         ) : null}
       </div>

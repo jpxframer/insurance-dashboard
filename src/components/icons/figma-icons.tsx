@@ -333,3 +333,123 @@ export function SystemDotIcon(props: IconProps) {
     </svg>
   );
 }
+
+/**
+ * Chevron pointing right, native 14px — the disclosure mark on every mobile
+ * settings row.
+ *
+ * The mobile header's back control is this glyph mirrored: its export is
+ * geometrically identical once normalised (0.179 / 0.5 / 0.821 on y, the same
+ * 0.1143 stroke ratio), so it is rendered with `rotate-180` rather than
+ * duplicated.
+ */
+export function ChevronRightIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 14 14" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M5 2.5L9.5 7L5 11.5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** Single figure over an arc — the Team & roles row. Native 14px. */
+export function TeamIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 14 14" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M7 7C8.44975 7 9.625 5.82475 9.625 4.375C9.625 2.92525 8.44975 1.75 7 1.75C5.55025 1.75 4.375 2.92525 4.375 4.375C4.375 5.82475 5.55025 7 7 7Z"
+        stroke="currentColor"
+        strokeWidth="1.3125"
+      />
+      <path
+        d="M2.1875 12.25C2.8 9.975 4.725 8.75 7 8.75C9.275 8.75 11.2 9.975 11.8125 12.25"
+        stroke="currentColor"
+        strokeWidth="1.3125"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/**
+ * Plain shield — the Claims workflow row. Native 14px.
+ *
+ * Not `ClaimsIcon`, which is the 24px shield **with a tick** used in the nav.
+ */
+export function ShieldPlainIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 14 14" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M7 1.3125L11.8125 3.5V7C11.8125 9.625 9.8 11.9 7 12.6875C4.2 11.9 2.1875 9.625 2.1875 7V3.5L7 1.3125Z"
+        stroke="currentColor"
+        strokeWidth="1.3125"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** Padlock — the Security row. Native 14px. */
+export function LockIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 14 14" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M10.5 6.125H3.5C2.77513 6.125 2.1875 6.71263 2.1875 7.4375V11.375C2.1875 12.0999 2.77513 12.6875 3.5 12.6875H10.5C11.2249 12.6875 11.8125 12.0999 11.8125 11.375V7.4375C11.8125 6.71263 11.2249 6.125 10.5 6.125Z"
+        stroke="currentColor"
+        strokeWidth="1.3125"
+      />
+      <path
+        d="M4.375 6.125V4.375C4.375 3.67881 4.65156 3.01113 5.14384 2.51884C5.63613 2.02656 6.30381 1.75 7 1.75C7.69619 1.75 8.36387 2.02656 8.85616 2.51884C9.34844 3.01113 9.625 3.67881 9.625 4.375V6.125"
+        stroke="currentColor"
+        strokeWidth="1.3125"
+      />
+    </svg>
+  );
+}
+
+/** Card with a magnetic stripe — the Billing row. Native 14px. */
+export function CreditCardIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 14 14" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M11.375 3.0625H2.625C1.90013 3.0625 1.3125 3.65013 1.3125 4.375V9.625C1.3125 10.3499 1.90013 10.9375 2.625 10.9375H11.375C12.0999 10.9375 12.6875 10.3499 12.6875 9.625V4.375C12.6875 3.65013 12.0999 3.0625 11.375 3.0625Z"
+        stroke="currentColor"
+        strokeWidth="1.3125"
+      />
+      <path d="M1.3125 5.6875H12.6875" stroke="currentColor" strokeWidth="1.3125" />
+    </svg>
+  );
+}
+
+/** Desktop display — an active session on a computer. Native 14px. */
+export function MonitorIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 14 14" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M11.375 2.1875H2.625C1.90013 2.1875 1.3125 2.77513 1.3125 3.5V8.75C1.3125 9.47487 1.90013 10.0625 2.625 10.0625H11.375C12.0999 10.0625 12.6875 9.47487 12.6875 8.75V3.5C12.6875 2.77513 12.0999 2.1875 11.375 2.1875Z"
+        stroke="currentColor"
+        strokeWidth="1.3125"
+      />
+      <path d="M4.375 12.25H9.625" stroke="currentColor" strokeWidth="1.3125" />
+    </svg>
+  );
+}
+
+/** Handset — an active session on a phone. Native 14px. */
+export function PhoneIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 14 14" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M8.75 1.3125H5.25C4.52513 1.3125 3.9375 1.90013 3.9375 2.625V11.375C3.9375 12.0999 4.52513 12.6875 5.25 12.6875H8.75C9.47487 12.6875 10.0625 12.0999 10.0625 11.375V2.625C10.0625 1.90013 9.47487 1.3125 8.75 1.3125Z"
+        stroke="currentColor"
+        strokeWidth="1.3125"
+      />
+      <path d="M6.125 10.9375H7.875" stroke="currentColor" strokeWidth="1.3125" />
+    </svg>
+  );
+}

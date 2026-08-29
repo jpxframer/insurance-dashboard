@@ -128,6 +128,9 @@ screen, with `PoliciesDesktop` owning selection and density so the page stays a 
 `variant` since the two frames differ in more than size) and the mobile-only summary and action
 bar. `src/components/inbox/` is the Inbox — the desktop list and thread pane, the mobile card list,
 and one `InboxTagChip` shared by both.
+`src/components/settings/` and `src/components/profile/` are Settings and Profile; both build on
+`settings/SettingsCard.tsx` and on `ui/Toggle.tsx`, `ui/SegmentedControl.tsx` and `ui/Field.tsx`,
+which the two screens share.
 `src/lib/policies.ts`, `src/lib/claims.ts` and `src/lib/inbox.ts` mirror `data.ts` for those
 screens; Claims reuses `ClaimStatus` and `StatusPill` from the dashboard rather than
 redeclaring them.
@@ -380,14 +383,95 @@ sender's stand-in for initials). The frame's 15px search glyph is byte-identical
 8. **Send reply is flat blue, no gloss.** That is the frame — worth noting only because every
    other primary button in the app carries the `gloss-blue` treatment.
 
-### One thing this screen did not change
+### The sidebar flag from the Inbox work is resolved
 
-**The Inbox frame draws the shared sidebar differently from the shell**, and the shell was left
-alone. This frame puts the nav on a 49px pitch starting at y=88, with Settings inline directly
-under Inbox at y≈405. The shell built in Phase 1 from the dashboard frames uses a 44px pitch
-from y=72, with Settings pinned above the user card at y=790. Six screens already render that
-shell and it was verified against its own frames, so one later frame is not enough to move it.
-Raise it with the designer rather than quietly picking a side.
+The Inbox commit noted that its frame drew the sidebar differently from the shell and left the
+shell alone pending a decision. The decision came, and the shell was wrong — not the frames.
+
+`20875-28900`, the Phase 1 dashboard frame the shell was supposedly built from, puts **Settings
+inline under the rule at y=328 on a 48px pitch**. Every later frame agrees, and the nav's own
+frame `22783-1847` puts it at y=333 on a **49px pitch**. The shell had it at a 44px pitch with
+Settings pushed to the foot of the rail by `mt-auto` — a guess that no frame supports.
+
+`Sidebar.tsx` now implements `22783-1847` and measures exactly: logo 16 (32 tall), links at
+**88 / 137 / 186 / 235 / 284 / 333** (40 tall, 49 pitch), **Settings at 405**, user card top
+**837**. Two details that were also off: the glyph is **24px**, not 20, and the row is `px-4`
+with a `gap-4` to its label — the frame puts the icon at x=16 and the label 40px in.
+
+Only the **desktop** rail changed. The mobile tab bar and the account menu are untouched.
+
+### Phase 3 — Settings and Profile (3 frames) — **implemented**
+
+| Node ID       | Figma name        | Size      | What it is                          |
+| ------------- | ----------------- | --------- | ----------------------------------- |
+| `22783-1835`  | Settings          | 1440×900  | Section rail + the General panel     |
+| `22783-2031`  | Settings Mobile   | 402×1244  | Grouped rows linking into sections   |
+| `22783-3126`  | Profile           | 1440×900  | Identity header + 2×2 cards          |
+| `22783-1847`  | Frame 13 (nav)    | 236×828   | The sidebar's own frame — see above  |
+
+Settings' two frames are different screens, not one at two widths: desktop is a 245px rail
+beside a four-card panel, mobile is a stack of grouped rows that *link into* those sections
+rather than showing them. Both pass `topBar={null}`. Profile has **no mobile frame** at all.
+
+Measured in-browser:
+
+- Settings desktop: rail 245 at x=236, panel 959 with a 57px header, cards 444.5 at x=509/968.
+  Card rows **353** (frame 355) and **266** (frame 265).
+- Profile desktop: header 1204×97, cards 567 at x=264/845, rows **293** and **235** — exact.
+- Settings mobile: header **75**, every row **73**, account card **78**, group headings **23**,
+  cards **291 / 366 / 146** against 293 / 366 / 147. Page 1263 against the frame's 1191 plus
+  our own 75px tab bar — 3px short across five stacked groups.
+
+Three things this screen turned on:
+
+- **The card body's top margin is 16 with a description and 14 without.** `SettingsCard` picks
+  between them. Getting this wrong is a uniform 2-4px on every card.
+- **Claims defaults' switch rows are in the 12px flow**, not butted together. They look like a
+  divided list but the frame gives each row a 12px gap *and* a rule — that alone was 36px.
+- **Mobile rows are 72, and the rule makes them 73.** Setting `min-h-[73px]` on all of them
+  makes every card 1px tall per row.
+
+### Settings and Profile deviations from the frames
+
+1. **Only General is designed.** Selecting another section moves the highlight and leaves the
+   panel where it is — the arrangement Claims and Inbox already use.
+2. **Every `@redpear.com` address, the "RedPear Operations" version string and the "RedPear app"
+   session label are written as Surebase.** The product was renamed in `56734e9`; the Figma file
+   predates it, and reproducing those would put a brand the repo deliberately removed back on
+   screen.
+3. **The workspace Logo slot shows the Surebase mark.** The frame drops the *pre-rename product
+   logo* in as its sample upload. That asset is gone, so the current mark stands in. It reads
+   oddly beside a workspace called "Gemini Communications" — worth a real placeholder from the
+   designer.
+4. **Discard / Save changes and Change photo / Save changes are each 36px.** The frames draw
+   them at 36 and 34; at equal heights they align optically, as already decided for Policies.
+5. **The read-only Role field is not an input.** Its value wraps to two 18px lines in the frame,
+   which an input truncates instead. Nothing can be typed there, so it renders as a wrapping
+   element — 40px tall against the frame's 38.
+6. **Selects carry their value and chevron but do not open.** No frame defines their options.
+7. **The mobile frame draws no tab bar** — Settings lives in the account menu, not the tabs. The
+   shell keeps the bar with nothing lit, as Analytics does.
+
+## The mobile profile — designed here, not in Figma
+
+**There is no frame for Profile on mobile**, only the desktop one. The mobile set stops at
+Settings, whose account row leads here and nowhere else. This is the second screen in the app
+without a frame behind it, after the mobile inbox thread. If a frame arrives later, it wins.
+
+It is the desktop profile's own four cards in the mobile shell's vocabulary:
+
+- The header is Settings-mobile's: a 46px back control and a 17px title, pinned with its rule
+  always on. Back goes to Settings, the only route in that any frame draws.
+- The desktop's 97px identity bar cannot also hold two buttons at 402px, so the identity becomes
+  a card that scrolls and Change photo goes full width beneath it.
+- **Save changes is fixed above the tab bar** at `bottom-[75px]`, 85px tall — where Claims
+  mobile puts its actions, and the same bar the inbox composer uses. The content carries
+  `pb-[85px]` on top of the shell's `pb-[75px]` to clear it.
+- The cards take `variant="mobile"`, which stacks the paired fields and **drops each segmented
+  control below its label** — three segments beside a label does not fit 370px.
+
+Nothing about the content is invented: every field, toggle, pill and session is the desktop
+frame's, re-laid out.
 
 ## Pinned mobile headers
 
