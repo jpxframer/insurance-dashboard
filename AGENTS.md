@@ -122,6 +122,7 @@ Two rendering notes worth keeping:
 panel, `DashboardShell` holds the nav state and the optional page-header slots).
 `src/components/dashboard/` is one file per card; `src/components/policies/` is the Policies
 screen, with `PoliciesDesktop` owning selection and density so the page stays a server component.
+`src/components/customers/` is the Customers list and detail, sharing one `customers.ts`.
 `src/components/claims/` is the Claims screen — the queue rail, the detail cards (each taking a
 `variant` since the two frames differ in more than size) and the mobile-only summary and action
 bar. `src/lib/policies.ts` and `src/lib/claims.ts` mirror `data.ts` for those screens; Claims
@@ -153,8 +154,49 @@ Measured geometry, verified in-browser via CDP:
 - Mobile: header 183.5px (frame 183), cards 370×107.2 on a 114px pitch (frame
   106/114), content starting at 197.5 (frame 197).
 
-Remaining 6 frames: `20875-33493`, `20875-33812`, `20875-32342`, `20875-32812`,
-`20875-33178`, `20875-33328`.
+Remaining 2 frames: `20875-33493`, `20875-33812`.
+
+### Phase 2 — Customers (8 of 10 frames) — **implemented**
+
+| Node ID       | Figma name             | Size      | What it is                     |
+| ------------- | ---------------------- | --------- | ------------------------------ |
+| `20875-32342` | Customers Index        | 1440×900  | List: stat tiles + table       |
+| `20875-33178` | Customers Index Mobile | 402×959   | List: cards                    |
+| `20875-32812` | Customers              | 1440×900  | Detail: aside + records        |
+| `20875-33328` | Customers Mobile       | 402×1207  | Detail: KPI grid + records     |
+
+Two screens at two breakpoints each, so this is the first pair of routes:
+`/customers` and `/customers/[id]`. Every row links through, and all ten ids prerender via
+`generateStaticParams`.
+
+Measured in-browser:
+
+- List desktop: top bar 57, header row 33, body row 48, grid
+  `1.6fr 92 90 56 100 56 72 92 104 16` on 24px gutters.
+- List mobile: header 183.5 (frame 183), cards 105.7 on a 113.7 pitch (frame 106 / 114).
+- Detail desktop: header 114.7, aside 280, record cards 860, activity/communication 422 each.
+- Detail mobile: page 1154 — exactly the frame's 1207 less its 53px status bar — and header
+  267.1 against 267.
+
+**Next 16 dynamic routes.** `params` is a promise, and the generated
+`PageProps<'/customers/[id]'>` is the type to use — same family as the `LayoutProps<"/">`
+already in `layout.tsx`. That type only exists once a build has regenerated
+`.next/types/routes.d.ts`, so a stale file makes `tsc` reject a brand-new route with *does not
+satisfy the constraint AppRoutes*. Run `npm run build` before believing that error.
+
+### Customers deviations from the frames
+
+1. **Only Marcus Johnson is designed.** Every `/customers/[id]` renders his record.
+2. **Locations are invented for five customers.** The mobile list shows a location for the five
+   it displays; the other five needed one for their card, so they were written to match.
+3. **The row chevron is a hover affordance.** The frame draws it on one row only, which reads as
+   a hover state rather than a permanent column.
+4. **Comfortable density is invented** (56px rows); only Compact's 48px is drawn.
+5. **Tabs, dropdowns and both search fields carry their states but do not filter** — as on the
+   other screens.
+6. **Elaine Cho's avatar tone differs between frames** — amber on desktop, slate on mobile. The
+   desktop tone is used for both.
+
 
 ### Phase 2 — Claims (4 of 10 frames) — **implemented**
 

@@ -3,8 +3,8 @@
 Handoff notes for picking this up in a fresh session. Read this first, then `AGENTS.md` for the
 frame-by-frame detail.
 
-**Last updated:** 2026-08-29 — Phase 1 complete; Phase 2 has Policies and Claims done (4 of 10
-frames). Renamed to Surebase, new logo in. See **Pick up here** below.
+**Last updated:** 2026-08-29 — Phase 1 complete; Phase 2 has Policies, Claims and Customers
+done (8 of 10 frames). Renamed to Surebase, new logo in. See **Pick up here** below.
 
 ---
 
@@ -31,7 +31,7 @@ generated type, not a mistake.
 **Clean point.** Working tree is clean, `main` is in sync with `origin/main`, nothing is
 half-finished.
 
-**Next piece of work: the 6 remaining Phase 2 frames.** Node IDs are in `AGENTS.md`. The user
+**Next piece of work: the last 2 Phase 2 frames** (`20875-33493`, `20875-33812`). Node IDs are in `AGENTS.md`. The user
 sequences work deliberately — confirm which screen is next rather than assuming.
 
 **The Figma MCP tools now work.** As of 2026-08-29 they load as deferred tools and the whole
@@ -58,7 +58,7 @@ Delivered, in order:
 - **`MEMORY.md` + `AGENTS.md`** as the two handoff docs.
 - **Public GitHub repo** (below).
 
-**Phase 2 — Policies and Claims done (4 of 10 frames), 6 remaining.** `/policies` implements desktop
+**Phase 2 — Policies, Claims and Customers done (8 of 10 frames), 2 remaining.** `/policies` implements desktop
 `20875-31238` and mobile `20875-31629`: a nine-column table with working row selection, bulk
 bar and density toggle, and a card list on mobile. Measured in-browser against the frames;
 numbers and the six deliberate deviations are in `AGENTS.md`.
@@ -68,7 +68,10 @@ numbers and the six deliberate deviations are in `AGENTS.md`.
 detail, mobile shows the detail alone. So the page passes `topBar={null}` and owns everything
 right of the sidebar. All four mobile cards match the frame exactly (211 / 238 / 278 / 156).
 
-Two things that came out of it and will bite again:
+`/customers` and `/customers/[id]` are the first pair of routes — the list links through and all
+ten ids prerender. Only Marcus Johnson is designed, so every id renders his record.
+
+Things that came out of this work and will bite again:
 
 - `DashboardShell` now takes optional `topBar` / `mobileHeader` slots, because the Policies
   frames carry their own page header instead of the dashboard's greeting bar. Omit them and
@@ -79,6 +82,12 @@ Two things that came out of it and will bite again:
 - **The ratio is per-frame, though.** Claims mobile measures ~1.33, and its cards came out 8-9px
   short until each text node got an explicit `leading-`. Read the frame’s own text-box heights
   with `get_metadata` before trusting either number.
+- **A new dynamic route fails `tsc` until you build.** `PageProps<'/customers/[id]'>` only exists
+  once `npm run build` regenerates `.next/types/routes.d.ts`. A stale file reports *does not
+  satisfy the constraint AppRoutes* for a route that is perfectly fine.
+- **Guard every desktop-only header with `lg:`.** A `topBar` passed to `DashboardShell` renders at
+  every width; forgetting it put the customer detail's tab row on mobile and blew the page out to
+  595px wide. Always re-measure the mobile breakpoint after adding a `topBar`.
 
 ## Repo
 
