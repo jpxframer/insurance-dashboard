@@ -126,8 +126,11 @@ screen, with `PoliciesDesktop` owning selection and density so the page stays a 
 `src/components/analytics/` is Analytics; its chart primitive is `ui/LineChart.tsx`.
 `src/components/claims/` is the Claims screen — the queue rail, the detail cards (each taking a
 `variant` since the two frames differ in more than size) and the mobile-only summary and action
-bar. `src/lib/policies.ts` and `src/lib/claims.ts` mirror `data.ts` for those screens; Claims
-reuses `ClaimStatus` and `StatusPill` from the dashboard rather than redeclaring them.
+bar. `src/components/inbox/` is the Inbox — the desktop list and thread pane, the mobile card list,
+and one `InboxTagChip` shared by both.
+`src/lib/policies.ts`, `src/lib/claims.ts` and `src/lib/inbox.ts` mirror `data.ts` for those
+screens; Claims reuses `ClaimStatus` and `StatusPill` from the dashboard rather than
+redeclaring them.
 `src/lib/data.ts` holds every string and figure transcribed from the frames — swap it for real
 API calls without touching components. Nav icons in `src/components/icons/figma-icons.tsx` were
 exported from Figma and recoloured to `currentColor`; the generic ones are hand-drawn to match.
@@ -308,6 +311,82 @@ checked one at a time.
 6. **Only the mobile header's title row pins**, not the whole header. The frame
    puts all 183px in normal flow, which would cost a fifth of the viewport if
    pinned; the title row alone is 74px. See *Pinned mobile headers* below.
+
+### Phase 3 — Inbox (2 frames) — **implemented**
+
+| Node ID       | Figma name   | Size      | What it is                          |
+| ------------- | ------------ | --------- | ----------------------------------- |
+| `22780-917`   | inbox        | 1440×900  | Message list + one open thread      |
+| `22780-1226`  | Inbox Mobile | 402×856   | The message list alone, as cards    |
+
+Like Claims, these are **not** the same content at two widths. Desktop is three columns —
+sidebar 236, message list 361, thread 843 — and mobile drops the thread entirely, turning the
+same five messages into cards. The list starts at the top of the viewport, so the page passes
+`topBar={null}` and owns everything right of the sidebar.
+
+Measured in-browser against the frames, all exact:
+
+- Columns 236 / 361 / 843 at x = 0 / 236 / 597; list header 79; thread header 87.
+- List rows **114 / 112 / 110 / 93 / 93**, counting each row's own 1px top rule. The rules sit
+  between rows (four for five rows, none under the last), with the container's own rule above
+  the first — so the row heights land on the frame without a stray line at the foot.
+- Bubbles 199.28 and 94.33 against the frame's 199.6 and 94.46; composer 100.
+- Mobile header stack **169**, cards **126 / 126 / 124 / 64 / 64** on 8px gaps, page 804 —
+  the frame's 856 less its 53px status bar, plus 1.
+
+#### What the two frames disagree about, and where that lives
+
+The desktop row and the mobile card are not the same component with a breakpoint. Rather than
+reconcile them, `lib/inbox.ts` carries the difference:
+
+- `preview` is the desktop snippet, `mobilePreview` the card's. Three messages word them
+  differently, and the two **read** messages drop the line entirely on mobile — hence optional.
+- Avatars exist only on mobile; desktop rows are name-first with no tile.
+- A read card also sheds its shadow and its dot. A read *row* only changes colour.
+
+#### Leading is explicit here, not `.leading-figma`
+
+These frames measure ~1.28–1.33, not the 1.21 that `.leading-figma` pins — the same trap the
+Claims mobile frame set. Every text node carries its own `leading-`, read off the frame's text
+boxes with `get_metadata`. Two that matter: the list's name line is **17px normally but 14px on
+the rows that carry an unread dot**, because the frame hangs the dot off the name rather than
+setting it beside it, which pulls the line box in; and the thread bubbles run `leading-[20.93px]`
+on 13.5px copy with 20.8px between paragraphs.
+
+Three glyphs were exported and added to `figma-icons.tsx` at their native boxes: `PaperclipIcon`
+(13), `SparkleIcon` (12, filled) and `SystemDotIcon` (15, a dot in a dashed ring, the System
+sender's stand-in for initials). The frame's 15px search glyph is byte-identical to the existing
+`SearchSmallIcon`, so that one is reused rather than re-exported.
+
+### Inbox deviations from the frames
+
+1. **Only Marcus Johnson's thread is designed.** Selecting another row moves the highlight; the
+   pane stays put. Same arrangement as Claims, for the same reason.
+2. **No mobile thread exists.** The mobile frame is the list and nothing else, so the cards are
+   `<article>`s rather than links — as on Policies. There is nowhere to send a tap.
+3. **Filter chips and both search fields carry their designed states but do not filter** — same
+   reason as every other screen.
+4. **Every list row carries the 2px left rule**, transparent until selected. The frame indents
+   the selected row's text by 2px, which would jog the row sideways on click; only the colour
+   changes here. Same technique as `MobileStickyBar`'s border.
+5. **The selected row keeps its unread weight but drops its dot**, as the frame draws it — the
+   message you are reading does not also need announcing.
+6. **The bubble's name and timestamp touch in the frame**; they get 8px. The row still
+   shrink-wraps to the two labels rather than pushing the time out to the bubble's edge.
+7. **The composer is pinned below the scrolling messages**, not scrolling with them. The frame
+   draws it at the foot of a pane whose content happens to fit; a composer that slides out of
+   reach on a long thread would be a regression.
+8. **Send reply is flat blue, no gloss.** That is the frame — worth noting only because every
+   other primary button in the app carries the `gloss-blue` treatment.
+
+### One thing this screen did not change
+
+**The Inbox frame draws the shared sidebar differently from the shell**, and the shell was left
+alone. This frame puts the nav on a 49px pitch starting at y=88, with Settings inline directly
+under Inbox at y≈405. The shell built in Phase 1 from the dashboard frames uses a 44px pitch
+from y=72, with Settings pinned above the user card at y=790. Six screens already render that
+shell and it was verified against its own frames, so one later frame is not enough to move it.
+Raise it with the designer rather than quietly picking a side.
 
 ## Pinned mobile headers
 

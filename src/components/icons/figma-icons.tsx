@@ -275,3 +275,56 @@ export function CheckSmallIcon(props: IconProps) {
     </svg>
   );
 }
+
+/**
+ * Paperclip on the reply composer's Attach button. Native 13px.
+ *
+ * The export clips to a 13x13 rect that the path already sits inside, so the
+ * clipPath is dropped rather than reproduced.
+ */
+export function PaperclipIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 13 13" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M8.82143 3.25L4.45714 7.61429C4.18971 7.91521 4.04735 8.30695 4.0592 8.70936C4.07105 9.11177 4.2362 9.49446 4.52087 9.77913C4.80554 10.0638 5.18823 10.229 5.59064 10.2408C5.99305 10.2526 6.38479 10.1103 6.68571 9.84286L11.3286 5.2C11.7309 4.66355 11.9262 3.99997 11.8787 3.33109C11.8312 2.66222 11.544 2.03293 11.0698 1.55877C10.5956 1.08461 9.96635 0.797401 9.29748 0.749866C8.6286 0.70233 7.96502 0.897662 7.42857 1.3L2.78571 5.94286C2.23444 6.71199 1.97425 7.65191 2.05153 8.59504C2.12881 9.53817 2.53854 10.4232 3.20767 11.0923C3.8768 11.7615 4.76183 12.1712 5.70496 12.2485C6.64809 12.3258 7.58801 12.0656 8.35714 11.5143L12.5357 7.42857"
+        stroke="currentColor"
+        strokeWidth="1.20714"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/** Four-point star on the composer's AI draft action. Native 12px, filled. */
+export function SparkleIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 12 12" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M6 1.125L7.2 4.35L10.5 5.625L7.2 6.9L6 10.125L4.8 6.9L1.5 5.625L4.8 4.35L6 1.125Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+/**
+ * The System sender's avatar glyph — a solid dot inside a dashed ring. Native
+ * 15px. Stands in for initials on the one message no person sent.
+ */
+export function SystemDotIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 15 15" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M7.5 9.5625C8.63909 9.5625 9.5625 8.63909 9.5625 7.5C9.5625 6.36091 8.63909 5.4375 7.5 5.4375C6.36091 5.4375 5.4375 6.36091 5.4375 7.5C5.4375 8.63909 6.36091 9.5625 7.5 9.5625Z"
+        stroke="currentColor"
+        strokeWidth="1.40625"
+      />
+      <path
+        d="M7.5 13.125C10.6066 13.125 13.125 10.6066 13.125 7.5C13.125 4.3934 10.6066 1.875 7.5 1.875C4.3934 1.875 1.875 4.3934 1.875 7.5C1.875 10.6066 4.3934 13.125 7.5 13.125Z"
+        stroke="currentColor"
+        strokeWidth="1.40625"
+        strokeDasharray="2.34 2.34"
+      />
+    </svg>
+  );
+}
