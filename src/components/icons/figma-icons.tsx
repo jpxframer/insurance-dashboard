@@ -154,3 +154,124 @@ export function NotifClockIcon(props: IconProps) {
     </svg>
   );
 }
+
+/*
+  Policies toolbar glyphs, exported from the two Policies frames and recoloured
+  to currentColor. Each keeps its native box and its own stroke width — the
+  export ratios differ per glyph, and scaling one down to another's size is the
+  mistake the overlay rebuild had to undo.
+
+  Two glyphs serve both breakpoints: the search ring and the filter rules export
+  at 13/15px and 11/13px respectively but are the same shape scaled, so the
+  larger box is authored once and rendered at either size.
+*/
+
+/** "Export" — arrow over a baseline. Native 13px. */
+export function ExportIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 13 13" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M6.5 1.39286V8.35714M3.71429 6.03571L6.5 8.82143L9.28571 6.03571M1.85714 11.6071H11.1429"
+        stroke="currentColor"
+        strokeWidth="1.39286"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** The plus on "New policy", "New" and "Save view". Native 12px. */
+export function PlusSmallIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 12 12" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M6 1.71429V10.2857M1.71429 6H10.2857"
+        stroke="currentColor"
+        strokeWidth="1.37143"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/** Search ring. Native 15px; the desktop field renders it at 13px. */
+export function SearchSmallIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 15 15" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M6.5 11.25C9.12335 11.25 11.25 9.12335 11.25 6.5C11.25 3.87665 9.12335 1.75 6.5 1.75C3.87665 1.75 1.75 3.87665 1.75 6.5C1.75 9.12335 3.87665 11.25 6.5 11.25Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M10.5 10.5L13.5 13.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/** Filter-control caret. Native 11px. */
+export function ChevronSmallIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 11 11" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M2.75 4.125L5.5 6.875L8.25 4.125"
+        stroke="currentColor"
+        strokeWidth="1.375"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/**
+ * Three centred rules of decreasing width — the "Columns" button on desktop and
+ * the "Filters · 2" chip on mobile. Native 13px.
+ */
+export function FilterLinesIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 13 13" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M1.85714 3.25H11.1429M3.71429 6.5H9.28571M5.10714 9.75H7.89286"
+        stroke="currentColor"
+        strokeWidth="1.39286"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/** Sort indicator on the Policy column. Native 9px. */
+export function SortArrowIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 9 9" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M4.5 1.8V7.2M6.48 5.22L4.5 7.2L2.52 5.22"
+        stroke="currentColor"
+        strokeWidth="1.17"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** The tick inside a checked row box. Native 8px. */
+export function CheckSmallIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 8 8" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M1.6 4.16L3.36 5.92L6.4 2.4"
+        stroke="currentColor"
+        strokeWidth="1.28"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}

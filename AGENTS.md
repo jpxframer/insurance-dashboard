@@ -99,15 +99,68 @@ Two rendering notes worth keeping:
 ### Where the code lives
 
 `src/components/layout/` is the shell (sidebar, top bar, mobile header + tab bar, notifications
-panel, `DashboardShell` holds the nav state). `src/components/dashboard/` is one file per card.
+panel, `DashboardShell` holds the nav state and the optional page-header slots).
+`src/components/dashboard/` is one file per card; `src/components/policies/` is the Policies
+screen, with `PoliciesDesktop` owning selection and density so the page stays a server component.
+`src/lib/policies.ts` mirrors `data.ts` for that screen.
 `src/lib/data.ts` holds every string and figure transcribed from the frames — swap it for real
 API calls without touching components. Nav icons in `src/components/icons/figma-icons.tsx` were
 exported from Figma and recoloured to `currentColor`; the generic ones are hand-drawn to match.
 
-### Phase 2 — remaining 10 frames (not started)
+### Phase 2 — Policies (2 of 10 frames) — **implemented**
 
-`20875-33493`, `20875-33812`, `20875-31762`, `20875-32146`, `20875-31238`,
-`20875-31629`, `20875-32342`, `20875-32812`, `20875-33178`, `20875-33328`
+| Node ID       | Figma name       | Size     | What it is                       |
+| ------------- | ---------------- | -------- | -------------------------------- |
+| `20875-31238` | Policies         | 1440×900 | Desktop, table + bulk selection  |
+| `20875-31629` | Policies Mobile  | 402×958  | Mobile, card list                |
+
+One list at two breakpoints: a nine-column table on desktop, stacked cards on
+mobile. Both frames supply **their own page header** — neither carries the
+dashboard's greeting bar, and the desktop frame drops the notifications bell
+entirely — so `DashboardShell` grew optional `topBar` and `mobileHeader` slots.
+Pass neither and the dashboard renders exactly as before.
+
+Measured geometry, verified in-browser via CDP:
+
+- Desktop table grid `40px 104px 1.5fr 104px 1.2fr 88px 92px 1fr 116px`, 10px
+  gutters, 18px side padding. The three `fr` columns resolve to 200.3 / 160.2 /
+  133.5 at 1440.
+- Header row and body rows are 36px; the card fills the viewport so its footer
+  pins to the bottom (measured bottom 884 = 900 − 16px page padding).
+- Mobile: header 183.5px (frame 183), cards 370×107.2 on a 114px pitch (frame
+  106/114), content starting at 197.5 (frame 197).
+
+Remaining 8 frames: `20875-33493`, `20875-33812`, `20875-31762`, `20875-32146`,
+`20875-32342`, `20875-32812`, `20875-33178`, `20875-33328`.
+
+### Two things this screen taught
+
+- **Line height is not `normal`.** Tailwind v4 gives an arbitrary `text-[13px]`
+  a **1.5** line-height, and CSS `line-height: normal` resolves to **1.333** for
+  Geist because it counts the font's line gap. Figma derives its text box from
+  ascender+descender and lands near **1.21**. Left alone, every row grew 3-5px
+  and compounded down the toolbar. `.leading-figma` in `globals.css` pins the
+  ratio; set it on a subtree root and the page inherits it.
+- **Read the exported SVG before drawing an icon.** "Columns" is three centred
+  rules of decreasing width, not the sliders-with-knobs it resembles at 13px.
+  The exports also disagree on stroke ratio per glyph, so each is authored at
+  its native box in `figma-icons.tsx` rather than scaled from a sibling.
+
+### Policies deviations from the frames
+
+1. **Comfortable density is invented.** Only Compact is drawn (36px rows); the
+   toggle is real and Comfortable is 44px.
+2. **Tabs and filters do not filter.** They carry their designed states only —
+   no frame defines a result set, and "Renewals this month 64" cannot be
+   honoured by ten mock rows.
+3. **Pagination arrows are drawn.** The frame sets them as Segoe UI text
+   glyphs (`←`/`→`) with no export.
+4. **Checked and unchecked boxes are both 17px.** The frame draws checked at
+   15px and unchecked at 17px, which would jitter the row by 2px on click.
+5. **Export and New policy are both 36px tall.** The frame has them at 36 and
+   34; at equal heights they align optically.
+6. **The mobile header scrolls** rather than pinning like the dashboard's — at
+   183px a pinned header would take a fifth of the viewport.
 
 ## Working notes
 

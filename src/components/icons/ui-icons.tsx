@@ -81,3 +81,43 @@ export function SparkleIcon(props: IconProps) {
     </svg>
   );
 }
+
+/*
+  The two pagination arrows. The frame sets these as Segoe UI text glyphs rather
+  than exporting them, so they are drawn here — in a 16px box, since scaling the
+  24px family down to 13px thins its strokes to well under a pixel.
+*/
+function SmallStroke({ children, ...props }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      {children}
+    </svg>
+  );
+}
+
+/** Pagination "previous". */
+export function ArrowLeftIcon(props: IconProps) {
+  return (
+    <SmallStroke {...props}>
+      <path d="M13 8H3.4M7.2 3.6 3 8l4.2 4.4" />
+    </SmallStroke>
+  );
+}
+
+/** Pagination "next". */
+export function ArrowNextIcon(props: IconProps) {
+  return (
+    <SmallStroke {...props}>
+      <path d="M3 8h9.6M8.8 3.6 13 8l-4.2 4.4" />
+    </SmallStroke>
+  );
+}

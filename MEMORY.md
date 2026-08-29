@@ -3,8 +3,8 @@
 Handoff notes for picking this up in a fresh session. Read this first, then `AGENTS.md` for the
 frame-by-frame detail.
 
-**Last updated:** 2026-08-28 — Phase 1 complete, shell scroll fixes applied, pushed. Paused for a
-break; see **Pick up here** below.
+**Last updated:** 2026-08-29 — Phase 1 complete; Phase 2 started, Policies (2 of 10 frames)
+built and verified. See **Pick up here** below.
 
 ---
 
@@ -28,46 +28,64 @@ generated type, not a mistake.
 
 ## Pick up here
 
-**Stopped mid-session for a break, at a clean point.** Nothing is half-finished — build and lint
-pass, everything except one file is committed and pushed.
+**Clean point.** Working tree is clean, `main` is in sync with `origin/main`, nothing is
+half-finished.
 
-**One open question, asked twice, still unanswered:**
+**One open decision, awaiting the user:**
 
-> `src/app/preview/` is **uncommitted** — the only dirty path in the tree. It's a local dev
-> harness (see *Previewing your work* below), not product code. The user was offered
-> "commit it or delete it" twice and hasn't chosen. **Ask once, then act** — don't leave it
-> hanging a third time.
+> The last commit, `67e666e`, carries a `Co-Authored-By: Claude Opus 5` trailer — a direct
+> violation of the sole-author rule under *Repo* below, and it is already pushed to a public
+> repo. Fixing it means amending the message and force-pushing `main`. The user has been told
+> and has not yet decided. Don't force-push without an explicit go-ahead.
 
-**Next piece of work: Phase 2 — the remaining 10 frames.** Node IDs in `AGENTS.md`. The user
-said "ready when you are" was met with a break, so open by confirming they still want Phase 2
-next rather than assuming.
+**Next piece of work: the 8 remaining Phase 2 frames.** Node IDs are in `AGENTS.md`. The user
+sequences work deliberately — confirm which screen is next rather than assuming.
 
-Before touching Phase 2, remember there is **no Figma access without a token** — the MCP
-connector is unusable (see below) and the user must supply a fresh `figd_…` one. They were asked
-to rotate the previous token, so assume the old one is dead.
+**The Figma MCP tools now work.** As of 2026-08-29 they load as deferred tools and the whole
+Policies screen was pulled through `get_design_context` / `get_screenshot` / `get_metadata`.
+No token was needed. The REST-API fallback below is still worth keeping, but try MCP first.
 
 ## Status
 
 **Phase 1 (dashboard home, 7 frames) — done, visually verified, pushed.** Build and lint clean.
 
-Also delivered after the initial build:
+Delivered, in order:
 
-- **Shell scroll model** (commit `b81ade9`) — desktop sidebar pinned to one viewport height;
-  mobile top bar fixed like the bottom tab bar with a scroll-reactive border. Details in
-  *Shell scroll model* below. Verified by measuring in a real browser, not by eye.
+- **Phase 1 implementation** (`e60c49e`) — the shell and every dashboard card.
+- **Shell scroll model** (`b81ade9`) — desktop sidebar pinned to one viewport height; mobile top
+  bar fixed like the bottom tab bar with a scroll-reactive border. Details in *Shell scroll
+  model* below. Verified by measuring in a real browser, not by eye.
+- **Overlay rebuild** (`67e666e`) — the desktop notifications popover, its mobile counterpart and
+  the mobile account menu were re-derived from their own Figma **component** nodes, which carry
+  geometry the composed frames hide. This corrected real errors, including a desktop popover 33%
+  too wide (418px → 314px). Glyphs are now authored at native box sizes in `figma-icons.tsx`;
+  six duplicates were dropped from `ui-icons.tsx`. Exact node IDs, measured sizes and the two
+  rendering notes (Figma strokes sit inside the frame; Geist + Geist Mono union their
+  half-leading) are in `AGENTS.md` under *Overlay components*.
 - **`MEMORY.md` + `AGENTS.md`** as the two handoff docs.
 - **Public GitHub repo** (below).
 
-**Phase 2 (remaining 10 frames) — not started.** Node IDs are listed in `AGENTS.md`. Confirm
-Phase 1 is signed off before starting; the user deliberately sequenced this and asked to "start
-small first".
+**Phase 2 — Policies done (2 of 10 frames), 8 remaining.** `/policies` implements desktop
+`20875-31238` and mobile `20875-31629`: a nine-column table with working row selection, bulk
+bar and density toggle, and a card list on mobile. Measured in-browser against the frames;
+numbers and the six deliberate deviations are in `AGENTS.md`.
+
+Two things that came out of it and will bite again:
+
+- `DashboardShell` now takes optional `topBar` / `mobileHeader` slots, because the Policies
+  frames carry their own page header instead of the dashboard's greeting bar. Omit them and
+  the dashboard is unchanged.
+- `.leading-figma` in `globals.css` pins line-height to Figma's 1.21. Tailwind v4 defaults an
+  arbitrary `text-[13px]` to 1.5 and CSS `normal` is 1.333 for Geist — both inflate every
+  measured row. Put it on a subtree root for any new screen built from these frames.
 
 ## Repo
 
 **https://github.com/jpxframer/insurance-dashboard** — public, default branch `main`,
 remote `origin` already configured.
 
-Commits so far: `create-next-app` scaffold → Phase 1 implementation → `b81ade9` shell scroll fixes.
+Commits so far: `create-next-app` scaffold → `e60c49e` Phase 1 implementation → `b81ade9` shell
+scroll fixes → `316146c` handoff notes → `67e666e` overlay rebuild.
 
 **The user is the sole author and contributor, and it must stay that way.** They asked
 explicitly for no Claude attribution. Do **not** add `Co-Authored-By`, "Generated with", or any
@@ -78,15 +96,20 @@ line. Verify after committing:
 git log -1 --format=%B | grep -iE "co-authored|claude|anthropic|generated with"
 ```
 
+**This check was skipped on `67e666e` and the trailer went in.** Run it every time; see the open
+decision under *Pick up here*.
+
 ## Previewing your work
 
 `npm run dev` → the dev server binds to all interfaces.
 
 - **http://localhost:3000** — the app
-- **http://localhost:3000/preview** — both breakpoints side by side (1440×900 and 402×888) in
-  real iframes, auto-scaled to fit, fully interactive. This is `src/app/preview/`, the
-  uncommitted dev harness.
-- **LAN URL** (was `http://192.168.18.4:3000`, re-check the IP) — for testing on a real phone.
+- **LAN URL** (was `http://192.168.18.4:3000`, re-check the IP) — for testing on a real phone
+
+There was a `src/app/preview/` harness that rendered both breakpoints side by side in iframes.
+It was never committed and has been deleted deliberately — **don't go looking for it, and don't
+recreate it unasked.** To check a breakpoint, drive a real browser over CDP (see *Verifying
+visual work*).
 
 Any dev server from a previous session is gone; restart it.
 
@@ -94,12 +117,15 @@ Any dev server from a previous session is gone; restart it.
 
 File `RedPear--Personal-Copy-`, key `2fDOIcwXWFZn2BQtEO7dAV`.
 
-The **claude.ai Figma MCP connector reports `√ Connected` from `claude mcp list` while exposing
-no tools to the session.** Restarting Claude Code did not fix it. Do not promise to read frames
-before confirming Figma tools are actually in the tool list.
+**The MCP connector works as of 2026-08-29** — its tools arrive as deferred tools, so they may
+not appear in the initial list; load them with a tool search before concluding they are missing.
+The Policies screen was built entirely through it, no token required. `get_design_context` is
+the one to reach for; `get_metadata` is the cheap way to get exact frame/child geometry without
+pulling a 100KB tree into context.
 
-**The working path is the Figma REST API** with a `figd_…` personal access token in an
-`X-Figma-Token` header:
+In earlier sessions the same connector reported `√ Connected` while exposing **no** tools, and
+restarting Claude Code did not fix it. If that recurs, **the fallback is the Figma REST API**
+with a `figd_…` personal access token in an `X-Figma-Token` header:
 
 | Need | Endpoint |
 | --- | --- |
@@ -111,6 +137,9 @@ before confirming Figma tools are actually in the tool list.
 
 URL node IDs use a hyphen (`20875-28900`); the API wants a colon (`20875:28900`). Parse node
 JSON with a Node script — one desktop frame is ~400KB, too big to read into context.
+
+**Prefer a component node over the frame that composes it.** The overlay rebuild exists because
+the composed frames were used first; the component nodes carry the real geometry.
 
 The user will need to supply a token. Any token pasted into chat should be rotated afterwards.
 
@@ -127,8 +156,9 @@ isn't there. Use the **DevTools Protocol** instead:
    (`captureBeyondViewport: true` for full-page).
 
 The same connection runs `Runtime.evaluate`, which is how to check overflow for real (compare
-`scrollWidth` to `clientWidth`) and to drive states by `el.click()`-ing a selector before
-capturing. **Measure in the page before changing layout code.**
+`scrollWidth` to `clientWidth`), how to measure a rendered element against its Figma size, and
+how to drive states by `el.click()`-ing a selector before capturing. **Measure in the page
+before changing layout code.**
 
 ## Architecture
 
@@ -140,9 +170,11 @@ src/
     page.tsx          Dashboard home; desktop grid ratios are measured Figma widths
   components/
     layout/           Shell. DashboardShell owns nav state so pages stay server components
+                      NotificationsPanel serves both breakpoints (width + count differ only)
     dashboard/        One file per card
     ui/               Card, StatusPill, Sparkline, AreaChart
-    icons/            figma-icons.tsx (exported, recoloured to currentColor)
+    icons/            figma-icons.tsx (exported, recoloured to currentColor, authored at
+                      native box sizes)
                       ui-icons.tsx (hand-drawn to match the 1.5px stroke family)
   lib/
     data.ts           Every string/figure transcribed from the frames — swap for real API
@@ -188,6 +220,10 @@ Only the page content scrolls; the chrome is pinned at both breakpoints.
 - **`sticky` inside a flex row needs `self-start`.** Default `align-items: stretch` sizes the
   item to content height, leaving `sticky` nothing to pin against. Cost an extra debug cycle on
   the sidebar.
+- **Figma strokes sit inside a frame, CSS borders sit outside the padding box.** Every bordered
+  edge sheds 1px of padding to keep the measured height.
+- **Don't scale a glyph down from the 24px nav family** — its strokes render far too thin.
+  Author each icon at its native box size.
 - The project folder name (`05- Web App`) is not npm-safe, so `create-next-app` had to scaffold
   elsewhere and be moved in. Package name is `redpear-dashboard`.
 

@@ -17,9 +17,23 @@ import { TopBar } from "./TopBar";
 export function DashboardShell({
   children,
   activeId = "dashboard",
+  topBar,
+  mobileHeader,
 }: {
   children: ReactNode;
   activeId?: string;
+  /**
+   * Replaces the dashboard's greeting bar in the 57px desktop slot. The
+   * Policies frames put a page title and its actions there instead, so the
+   * header is the page's to supply — the shell only owns the slot.
+   */
+  topBar?: ReactNode;
+  /**
+   * Replaces the mobile logo bar and the greeting beneath it. Pages that pass
+   * this lose the notifications and account overlays, which is what the
+   * Policies mobile frame shows.
+   */
+  mobileHeader?: ReactNode;
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -45,23 +59,29 @@ export function DashboardShell({
       <Sidebar collapsed={collapsed} onToggle={toggleSidebar} activeId={activeId} />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar
-          notificationsOpen={notificationsOpen}
-          onNotificationsToggle={toggleNotifications}
-          onNotificationsClose={closeNotifications}
-        />
+        {topBar ?? (
+          <TopBar
+            notificationsOpen={notificationsOpen}
+            onNotificationsToggle={toggleNotifications}
+            onNotificationsClose={closeNotifications}
+          />
+        )}
 
-        <MobileHeader
-          notificationsOpen={notificationsOpen}
-          onNotificationsToggle={toggleNotifications}
-          onNotificationsClose={closeNotifications}
-          profileOpen={profileOpen}
-          onProfileToggle={toggleProfile}
-          onProfileClose={closeProfile}
-        />
+        {mobileHeader ?? (
+          <>
+            <MobileHeader
+              notificationsOpen={notificationsOpen}
+              onNotificationsToggle={toggleNotifications}
+              onNotificationsClose={closeNotifications}
+              profileOpen={profileOpen}
+              onProfileToggle={toggleProfile}
+              onProfileClose={closeProfile}
+            />
 
-        {/* Scrolls away under the fixed bar above it. */}
-        <MobileGreeting />
+            {/* Scrolls away under the fixed bar above it. */}
+            <MobileGreeting />
+          </>
+        )}
 
         <main className="flex-1 pb-[75px] lg:pb-0">{children}</main>
       </div>

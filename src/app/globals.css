@@ -45,6 +45,36 @@
 }
 
 @layer utilities {
+  /*
+    "Gloss Dashboard" in the Figma library — the lit-from-above treatment on
+    primary blue surfaces (New policy, the mobile New button, the current page
+    chip, a checked row box). One drop shadow over three insets.
+  */
+  .gloss-blue {
+    box-shadow:
+      0 4px 5px 0 rgb(0 0 0 / 0.15),
+      inset 0 2px 2px 0 #2563eb,
+      inset 0 -2px 2px 0 rgb(0 0 0 / 0.2),
+      inset 0 4px 4px 0 rgb(255 255 255 / 0.25);
+  }
+
+  /*
+    Figma writes `leading-[normal]` on essentially every text node in these
+    frames. Two things fight that in the browser:
+
+      - Tailwind v4 gives an arbitrary `text-[13px]` a 1.5 line-height, which
+        grows each row 3-5px and compounds down a toolbar.
+      - CSS `line-height: normal` is not Figma's "normal". Measured in-browser,
+        Geist resolves it to 1.333 because it includes the font's line gap;
+        Figma derives its box from ascender+descender alone, landing at ~1.21.
+
+    So the ratio is pinned rather than left to either default. Set on a subtree
+    root and the whole page inherits it.
+  */
+  .leading-figma {
+    line-height: 1.21;
+  }
+
   /* Hide scrollbars on the horizontally-scrolling mobile regions. */
   .no-scrollbar {
     scrollbar-width: none;
