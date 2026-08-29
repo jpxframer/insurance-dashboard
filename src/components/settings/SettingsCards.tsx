@@ -92,7 +92,14 @@ export function ClaimsDefaultsCard() {
   );
 }
 
-/** The three visible members of eight, each with their role badge. */
+/**
+ * The three visible members of eight, each with their role badge.
+ *
+ * Transcribed from the frame, which places it in General's third slot. That
+ * slot now holds Preferences so the theme is reachable from desktop Settings,
+ * so this is unplaced until the Team & roles section is built — which is the
+ * section it actually belongs to.
+ */
 export function TeamCard() {
   return (
     <SettingsCard

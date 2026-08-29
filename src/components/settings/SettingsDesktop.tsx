@@ -2,12 +2,8 @@
 
 import { useState } from "react";
 import { SettingsSubNav } from "./SettingsSubNav";
-import {
-  ClaimsDefaultsCard,
-  DangerZoneCard,
-  TeamCard,
-  WorkspaceCard,
-} from "./SettingsCards";
+import { ProfilePreferencesCard } from "@/components/profile/ProfileCards";
+import { ClaimsDefaultsCard, DangerZoneCard, WorkspaceCard } from "./SettingsCards";
 import { settingsPage } from "@/lib/settings";
 
 /**
@@ -20,6 +16,11 @@ import { settingsPage } from "@/lib/settings";
  * Discard and Save changes are both 36px tall. The frame draws them at 36 and
  * 34; at equal heights they align optically, which is the call already made for
  * the Policies toolbar.
+ *
+ * The frame puts the Team card in the third slot. It holds Preferences instead —
+ * the same card Profile uses — so the theme can be changed from Settings on
+ * desktop, as it already can on mobile. `TeamCard` is kept for the Team & roles
+ * section, which is where it belongs once that section is built.
  */
 export function SettingsDesktop() {
   const [section, setSection] = useState(settingsPage.activeSection);
@@ -57,7 +58,7 @@ export function SettingsDesktop() {
           <div className="grid grid-cols-2 items-stretch gap-[14px]">
             <WorkspaceCard />
             <ClaimsDefaultsCard />
-            <TeamCard />
+            <ProfilePreferencesCard />
             <DangerZoneCard />
           </div>
         </div>

@@ -4,7 +4,7 @@ import type { SVGProps } from "react";
 /**
  * The logomark, exported from Figma node `22777-846`. Authored at its native
  * 17.333px box and recoloured to `currentColor` — the export fills it slate-50,
- * which the tile supplies.
+ * which the tile supplies as white.
  *
  * The frame drops this 17.333px glyph into a 16px clipped box, which would
  * shave 1.33px off its right and bottom edges. It is scaled to fit instead:
@@ -40,7 +40,12 @@ export function Logo({
 }) {
   return (
     <span className={cn("flex items-center gap-2", className)}>
-      <span className="gloss-blue grid size-8 shrink-0 place-items-center rounded-lg bg-blue-600 text-slate-50">
+      {/*
+        `text-white`, not `text-slate-50`: the mark sits on a blue tile in both
+        themes, and dark mode inverts the slate ramp — slate-50 becomes #020617
+        and the mark disappears into its own tile. White is what it actually is.
+      */}
+      <span className="gloss-blue grid size-8 shrink-0 place-items-center rounded-lg bg-blue-600 text-white">
         <SurebaseMark className="size-4" />
       </span>
 

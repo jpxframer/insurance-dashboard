@@ -463,7 +463,11 @@ Three things this screen turned on:
    which an input truncates instead. Nothing can be typed there, so it renders as a wrapping
    element — 40px tall against the frame's 38.
 6. **Selects carry their value and chevron but do not open.** No frame defines their options.
-7. **The mobile frame draws no tab bar** — Settings lives in the account menu, not the tabs. The
+7. **General's third card is Preferences, not Team.** The frame puts the Team card there. It
+   holds Profile's Preferences card instead, so the theme can be changed from Settings on
+   desktop as it already can on mobile. `TeamCard` is kept, unplaced, for the Team & roles
+   section — which is the section it actually belongs to.
+8. **The mobile frame draws no tab bar** — Settings lives in the account menu, not the tabs. The
    shell keeps the bar with nothing lit, as Analytics does.
 
 ## The mobile profile — designed here, not in Figma
@@ -585,6 +589,10 @@ Four utilities must not follow the ramp, and are overridden by hand:
   `bg-blue-600` keeps the frame's exact fill.
 - `input`, `textarea` and `select` take #1e293b, because fields sit *above* their card in the
   frame rather than below it.
+
+A fourth case was not an override but a wrong class: the logomark's tile was `text-slate-50`,
+which inverts to #020617 and swallowed the mark into its own blue tile. It is `text-white` now,
+which is what the mark has always been — white on blue, in both themes.
 
 ### How it is driven
 
