@@ -3,8 +3,8 @@
 Handoff notes for picking this up in a fresh session. Read this first, then `AGENTS.md` for the
 frame-by-frame detail.
 
-**Last updated:** 2026-08-29 — Phase 1 complete; Phase 2 has Policies, Claims and Customers
-done (8 of 10 frames). Renamed to Surebase, new logo in. See **Pick up here** below.
+**Last updated:** 2026-08-29 — **Phase 1 and Phase 2 are both complete: all 17 frames in the
+file are implemented.** Renamed to Surebase, new logo in. See **Pick up here** below.
 
 ---
 
@@ -31,8 +31,10 @@ generated type, not a mistake.
 **Clean point.** Working tree is clean, `main` is in sync with `origin/main`, nothing is
 half-finished.
 
-**Next piece of work: the last 2 Phase 2 frames** (`20875-33493`, `20875-33812`). Node IDs are in `AGENTS.md`. The user
-sequences work deliberately — confirm which screen is next rather than assuming.
+**There is no queued work — every frame in the Figma file has been built.** The user sequences
+work deliberately, so ask what is next rather than inventing it. Candidates, none of them
+requested: the nav destinations with no design behind them (Inbox, Settings), real records
+behind `/customers/[id]` and the claims queue, or wiring up any of the inert controls.
 
 **The Figma MCP tools now work.** As of 2026-08-29 they load as deferred tools and the whole
 Policies screen was pulled through `get_design_context` / `get_screenshot` / `get_metadata`.
@@ -58,7 +60,7 @@ Delivered, in order:
 - **`MEMORY.md` + `AGENTS.md`** as the two handoff docs.
 - **Public GitHub repo** (below).
 
-**Phase 2 — Policies, Claims and Customers done (8 of 10 frames), 2 remaining.** `/policies` implements desktop
+**Phase 2 — complete (10 of 10 frames).** `/policies` implements desktop
 `20875-31238` and mobile `20875-31629`: a nine-column table with working row selection, bulk
 bar and density toggle, and a card list on mobile. Measured in-browser against the frames;
 numbers and the six deliberate deviations are in `AGENTS.md`.
@@ -85,6 +87,10 @@ Things that came out of this work and will bite again:
 - **A new dynamic route fails `tsc` until you build.** `PageProps<'/customers/[id]'>` only exists
   once `npm run build` regenerates `.next/types/routes.d.ts`. A stale file reports *does not
   satisfy the constraint AppRoutes* for a route that is perfectly fine.
+- **The chart values are the frame’s own exported path data**, stored in its plot units (0 on
+  the baseline, 170 at the top) so the curve is reproduced rather than re-invented.
+  `ui/LineChart.tsx` is a separate primitive from `AreaChart` because the Analytics series are
+  unfilled strokes.
 - **Guard every desktop-only header with `lg:`.** A `topBar` passed to `DashboardShell` renders at
   every width; forgetting it put the customer detail's tab row on mobile and blew the page out to
   595px wide. Always re-measure the mobile breakpoint after adding a `topBar`.

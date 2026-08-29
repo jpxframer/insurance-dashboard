@@ -123,6 +123,7 @@ panel, `DashboardShell` holds the nav state and the optional page-header slots).
 `src/components/dashboard/` is one file per card; `src/components/policies/` is the Policies
 screen, with `PoliciesDesktop` owning selection and density so the page stays a server component.
 `src/components/customers/` is the Customers list and detail, sharing one `customers.ts`.
+`src/components/analytics/` is Analytics; its chart primitive is `ui/LineChart.tsx`.
 `src/components/claims/` is the Claims screen — the queue rail, the detail cards (each taking a
 `variant` since the two frames differ in more than size) and the mobile-only summary and action
 bar. `src/lib/policies.ts` and `src/lib/claims.ts` mirror `data.ts` for those screens; Claims
@@ -154,7 +155,46 @@ Measured geometry, verified in-browser via CDP:
 - Mobile: header 183.5px (frame 183), cards 370×107.2 on a 114px pitch (frame
   106/114), content starting at 197.5 (frame 197).
 
-Remaining 2 frames: `20875-33493`, `20875-33812`.
+**Phase 2 is complete — all 10 frames implemented.**
+
+### Phase 2 — Analytics (10 of 10 frames) — **implemented**
+
+| Node ID       | Figma name       | Size      | What it is                       |
+| ------------- | ---------------- | --------- | -------------------------------- |
+| `20875-33493` | Analytics        | 1440×900  | KPIs, chart, bars, agent table    |
+| `20875-33812` | Analytics Mobile | 402×1625  | Same, stacked; agents as cards    |
+
+Desktop is two 1.5 : 1 grid rows under the KPI strip. Mobile stacks everything and turns the
+agent table into one card per agent, with its heading outside the cards.
+
+Measured in-browser: desktop top bar 57 and a 272px first row; mobile page **1572 — exactly the
+frame's 1625 less its 53px status bar** — with a 130px header against 129.
+
+#### The chart came out of the frame's own exported paths
+
+The two series are exported as SVG `<path>` data, so they were read rather than invented. The
+plot is 170 tall with gridlines at y = 10 / 60 / 110 / 160; the premium band occupies y 34–120
+and claims y 112–148, both 13 points on one shared scale. `lib/analytics.ts` stores the values
+in **the frame's plot units** (0 on the baseline, 170 at the top) so the curve is reproduced
+exactly, and `ui/LineChart.tsx` plots `y = height − value` with no rescaling.
+
+`LineChart` is a new primitive rather than a change to `AreaChart`: the frame's series are bare
+1.93px strokes with no fill, where `AreaChart` fills a single series under its curve.
+
+Bar fills across both bar cards, in order: blue-600, blue-400, slate-400, amber-500, slate-300.
+
+### Analytics deviations from the frames
+
+1. **The mobile tab bar highlights nothing.** Analytics is not one of the five mobile tabs — it
+   lives in the account menu — and the frame highlights *Home* while showing the Analytics
+   screen, which would be actively misleading. `activeId="analytics"` leaves no tab lit instead.
+   The frame's back arrow returns to the dashboard.
+2. **The range switch and Export do not filter or export.** Both carry their designed states
+   only; no frame defines a second range.
+3. **Chart values are plot units, not currency.** The frame exports a shape, not a dataset, so
+   there are no underlying dollar figures to store — only the curve. Swapping in real data means
+   giving `LineChart` a domain and scaling to it.
+
 
 ### Phase 2 — Customers (8 of 10 frames) — **implemented**
 
