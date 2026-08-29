@@ -1,15 +1,16 @@
 import { InboxTagChip } from "./InboxTagChip";
-import { inboxThread } from "@/lib/inbox";
+import type { InboxThread } from "@/lib/inbox";
 
 /**
- * The open thread's header: subject, its tag, three actions, and the
- * addressing line beneath.
+ * The open thread's header: subject, its tag, its actions, and the addressing
+ * line beneath.
  *
- * The three buttons carry their designed states only — no frame defines what
- * Assign or Archive lead to.
+ * The actions vary with the tag — a claim opens a claim, a renewal opens a
+ * policy, and a thread with neither offers only Archive — but they carry their
+ * designed states only.
  */
-export function InboxThreadHeader() {
-  const { subject, tag, actions, metaLead, metaReference } = inboxThread;
+export function InboxThreadHeader({ thread }: { thread: InboxThread }) {
+  const { subject, tag, actions, metaLead, metaReference } = thread;
 
   return (
     // pb is 17px in the frame; the border-b eats one, per the stroke-inside rule.
@@ -19,7 +20,7 @@ export function InboxThreadHeader() {
           {subject}
         </h1>
 
-        <InboxTagChip tag={tag} className="shrink-0" />
+        {tag ? <InboxTagChip tag={tag} className="shrink-0" /> : null}
 
         <div className="ml-auto flex shrink-0 gap-2">
           {actions.map((action) => (
@@ -36,7 +37,9 @@ export function InboxThreadHeader() {
 
       <p className="truncate text-[12px] leading-[16px] text-slate-400">
         {metaLead}
-        <span className="tnum font-mono text-[11.5px] text-blue-600">{metaReference}</span>
+        {metaReference ? (
+          <span className="tnum font-mono text-[11.5px] text-blue-600">{metaReference}</span>
+        ) : null}
       </p>
     </header>
   );

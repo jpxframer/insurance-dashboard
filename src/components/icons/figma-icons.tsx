@@ -295,8 +295,13 @@ export function PaperclipIcon(props: IconProps) {
   );
 }
 
-/** Four-point star on the composer's AI draft action. Native 12px, filled. */
-export function SparkleIcon(props: IconProps) {
+/**
+ * Four-point star on the composer's AI draft action. Native 12px, filled.
+ *
+ * Not the same glyph as `ui-icons`' hand-drawn 24px `SparkleIcon`, which the
+ * dashboard's AI card uses — hence the distinct name.
+ */
+export function SparkleSmallIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 12 12" fill="none" aria-hidden="true" {...props}>
       <path

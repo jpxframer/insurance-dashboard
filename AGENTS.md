@@ -360,10 +360,11 @@ sender's stand-in for initials). The frame's 15px search glyph is byte-identical
 
 ### Inbox deviations from the frames
 
-1. **Only Marcus Johnson's thread is designed.** Selecting another row moves the highlight; the
-   pane stays put. Same arrangement as Claims, for the same reason.
-2. **No mobile thread exists.** The mobile frame is the list and nothing else, so the cards are
-   `<article>`s rather than links — as on Policies. There is nowhere to send a tap.
+1. **Only Marcus Johnson's thread is designed.** The other four were written so that opening a
+   message leads somewhere; see *The mobile thread view* below. Selection comes from the URL,
+   not local state.
+2. **No mobile thread was designed.** One was drawn here instead — see *The mobile thread
+   view* below — so the cards link to `/inbox/[id]` rather than going nowhere.
 3. **Filter chips and both search fields carry their designed states but do not filter** — same
    reason as every other screen.
 4. **Every list row carries the 2px left rule**, transparent until selected. The frame indents
@@ -414,6 +415,57 @@ after a 600px scroll and no horizontal overflow.
 
 Claims is the exception. Its mobile header **is** the title row and nothing else, so all of it
 pins with its rule always on, and it uses a plain `sticky top-0 z-30` rather than the primitive.
+
+## The mobile thread view — designed here, not in Figma
+
+**There is no frame for an opened message on mobile.** The mobile design stops at the list. This
+view was drawn to fill that gap on 2026-08-29 at the user's request, and it is the only screen in
+the app without a frame behind it. If a frame arrives later, it wins.
+
+Nothing here is invented that the designed screens do not already say. It is the desktop
+thread's own three parts rebuilt in the mobile shell's established vocabulary:
+
+| Desktop | Mobile | Why |
+| --- | --- | --- |
+| Header: subject, tag, 3 actions | Pinned row: back · subject · tag · overflow, then the actions below | The Claims-mobile header exactly — 46px controls, two-line title block |
+| Actions inline in the header | A horizontally scrolling row of the same outline buttons | Three won't fit on a 402px row; the `-mx-4 px-4` bleed is the filter-chip pattern |
+| Composer at the foot of the pane | Fixed above the tab bar, at `bottom-[75px]` | Where Claims mobile puts its actions. Reply is why you opened the thread |
+| Avatar 34 · bubble 678 max | Avatar 32 · bubble fills the row | `ThreadBubble` takes a `variant`, as the Claims cards do |
+
+Four decisions worth defending:
+
+- **Bubbles stay left-aligned for both sides**, as the desktop draws them, rather than adopting
+  the right-aligned chat idiom. No frame in this product establishes that, and the fill —
+  white against blue-50 — already separates the two.
+- **The pinned row's second line always carries something**: the tag and its reference where
+  there is one, the correspondent's name where there is not. The bar then holds one height
+  across every thread instead of shrinking on the untagged ones.
+- **Attach and AI draft are real buttons with 40px hit areas**, not glyphs sitting in the field.
+  Attach is a button on desktop and must not quietly become decoration at the size where
+  fingers are the input.
+- **A thread with nobody to answer renders no composer.** The System digest gets a muted
+  "Automated digest · no reply" line in the same bar instead — the page keeps one shape, and the
+  absence is explained rather than left as an unexplained edge.
+
+Measured at 402: pinned bar **76** (the same as Claims mobile), composer **85**, sitting at
+top 360 in a 520-tall viewport — exactly `520 − 85 − 75`. The message list's
+`pb-[85px]` on top of the shell's `pb-[75px]` is exact: scrolled to the bottom, the last
+bubble ends flush at the composer's top edge rather than under it.
+
+### What this pulled in with it
+
+Opening a message needs somewhere to open, so `/inbox/[id]` is now a route and every row and
+card links to it. That makes the desktop's open thread come from the URL rather than local
+state — shareable, reloadable, and reachable from the mobile cards — and leaves the two-column
+frame unchanged, since a thread link opened on a desktop still renders the whole Inbox with that
+message selected. All five ids prerender.
+
+**Four of the five threads are invented.** Only `msg-1` is designed, transcribed from
+`22780-917` down to its paragraph breaks. The other four are written to match the snippet each
+row already showed, so that opening any message leads somewhere. Their bodies, addresses and
+timestamps are mock content in the same sense as the rest of `lib/` — but unlike the rest, they
+were not read off a frame. Header actions vary with the tag (a claim opens a claim, a renewal
+opens a policy, an untagged thread offers only Archive), which is also invented.
 
 ## Working notes
 

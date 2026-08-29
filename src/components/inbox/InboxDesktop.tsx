@@ -5,35 +5,35 @@ import { InboxComposer } from "./InboxComposer";
 import { InboxList } from "./InboxList";
 import { InboxThreadHeader } from "./InboxThreadHeader";
 import { InboxThreadMessages } from "./InboxThreadMessages";
-import { inboxMessages, inboxPage } from "@/lib/inbox";
+import { inboxPage, inboxThreads } from "@/lib/inbox";
 
 /**
- * Desktop Inbox: the message list beside one open thread, both pinned to a
+ * Desktop Inbox: the message list beside the open thread, both pinned to a
  * single viewport height so each scrolls on its own.
  *
- * Only Marcus Johnson's thread is designed, so selecting another row moves the
- * highlight but leaves the pane where it is — the same arrangement Claims uses,
- * and for the same reason. See the deviation note in AGENTS.md.
+ * Which thread is open comes from the URL, not local state — every row is a
+ * link to `/inbox/[id]`, so a thread can be shared, reloaded and reached from
+ * the mobile card list. Only the filter chips keep client state, which is why
+ * this stays the one client component on the page.
  */
-export function InboxDesktop() {
-  const [selectedId, setSelectedId] = useState(inboxMessages[0].id);
+export function InboxDesktop({ selectedId }: { selectedId: string }) {
   const [filter, setFilter] = useState(inboxPage.filters[0].id);
+  const thread = inboxThreads[selectedId];
 
   return (
     <div className="hidden h-dvh min-w-0 lg:flex">
       <InboxList
         selectedId={selectedId}
-        onSelect={setSelectedId}
         activeFilter={filter}
         onFilterChange={setFilter}
       />
 
       <div className="flex h-dvh min-w-0 flex-1 flex-col bg-slate-50">
-        <InboxThreadHeader />
+        <InboxThreadHeader thread={thread} />
 
         <div className="flex min-h-0 flex-1 flex-col px-6 py-5">
-          <InboxThreadMessages />
-          <InboxComposer />
+          <InboxThreadMessages thread={thread} />
+          {thread.replyTo ? <InboxComposer replyTo={thread.replyTo} /> : null}
         </div>
       </div>
     </div>

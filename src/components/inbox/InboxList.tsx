@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { InboxTagChip } from "./InboxTagChip";
 import { inboxMessages, inboxPage, type InboxMessage } from "@/lib/inbox";
 import { cn } from "@/lib/cn";
@@ -8,18 +9,16 @@ import { cn } from "@/lib/cn";
  * The 361px message list, left of the open thread. Desktop only — the mobile
  * frame turns this same list into cards.
  *
- * Selecting a row is real; only Marcus Johnson's thread is designed, so the
- * pane beside it does not change. The four filter chips carry their designed
- * states but do not filter — no frame defines a result set for them.
+ * Every row links to `/inbox/[id]`, so the open thread is addressable rather
+ * than held in local state. The four filter chips carry their designed states
+ * but do not filter — no frame defines a result set for them.
  */
 export function InboxList({
   selectedId,
-  onSelect,
   activeFilter,
   onFilterChange,
 }: {
   selectedId: string;
-  onSelect: (id: string) => void;
   activeFilter: string;
   onFilterChange: (id: string) => void;
 }) {
@@ -65,11 +64,7 @@ export function InboxList({
       <ul className="min-h-0 flex-1 divide-y divide-slate-100 overflow-y-auto border-t border-slate-100">
         {inboxMessages.map((message) => (
           <li key={message.id}>
-            <InboxRow
-              message={message}
-              selected={message.id === selectedId}
-              onSelect={() => onSelect(message.id)}
-            />
+            <InboxRow message={message} selected={message.id === selectedId} />
           </li>
         ))}
       </ul>
@@ -84,22 +79,13 @@ export function InboxList({
  * The selected row keeps its unread weight but drops the dot, as the frame
  * draws it — the message you are reading does not also need to be announced.
  */
-function InboxRow({
-  message,
-  selected,
-  onSelect,
-}: {
-  message: InboxMessage;
-  selected: boolean;
-  onSelect: () => void;
-}) {
+function InboxRow({ message, selected }: { message: InboxMessage; selected: boolean }) {
   const { sender, time, subject, preview, unread, tag, reference } = message;
   const showDot = unread && !selected;
 
   return (
-    <button
-      type="button"
-      onClick={onSelect}
+    <Link
+      href={`/inbox/${message.id}`}
       aria-current={selected ? "true" : undefined}
       className={cn(
         // The 2px left rule is on every row and only its colour changes, so
@@ -152,6 +138,6 @@ function InboxRow({
       </span>
 
       {tag ? <InboxTagChip tag={tag} reference={reference} className="pt-1" /> : null}
-    </button>
+    </Link>
   );
 }

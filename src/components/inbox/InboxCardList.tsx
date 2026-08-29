@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SystemDotIcon } from "@/components/icons/figma-icons";
 import { InboxTagChip } from "./InboxTagChip";
 import { avatarToneClass, inboxMessages, type InboxMessage } from "@/lib/inbox";
@@ -9,6 +10,9 @@ import { cn } from "@/lib/cn";
  * Where the desktop list is name-first with no tile, the cards lead with an
  * avatar, and the two read messages shed their preview line, their unread dot
  * and their shadow — a read card is a two-line summary, not a truncated one.
+ *
+ * Each card opens its thread at `/inbox/[id]`. The mobile thread has no frame
+ * behind it — see *The mobile thread view* in AGENTS.md.
  */
 export function InboxCardList() {
   return (
@@ -37,10 +41,12 @@ function InboxCard({ message }: { message: InboxMessage }) {
   } = message;
 
   return (
-    <article
+    <Link
+      href={`/inbox/${message.id}`}
       className={cn(
         // 15/14 in the frame; the border eats 1px on every edge.
         "flex flex-col gap-1.5 rounded-[14px] border border-slate-200 bg-white px-[14px] py-[13px]",
+        "transition-colors active:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600",
         unread ? "shadow-[var(--shadow-card)]" : null,
       )}
     >
@@ -92,6 +98,6 @@ function InboxCard({ message }: { message: InboxMessage }) {
       ) : null}
 
       {tag ? <InboxTagChip tag={tag} reference={reference} className="pt-px" /> : null}
-    </article>
+    </Link>
   );
 }
