@@ -1,4 +1,4 @@
-// Generated from the RedPear Figma file — icon instances exported as SVG,
+// Generated from the Surebase Figma file — icon instances exported as SVG,
 // then recolored to currentColor so they inherit text color.
 import type { SVGProps } from "react";
 

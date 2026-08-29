@@ -8,9 +8,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# RedPear Dashboard
+# Surebase Dashboard
 
-Frontend for the RedPear dashboard, built from Figma designs.
+Frontend for the Surebase Insurance dashboard, built from Figma designs.
 
 ## Stack (decided 2026-08-28)
 
@@ -23,12 +23,14 @@ Frontend for the RedPear dashboard, built from Figma designs.
 
 ## Figma source
 
-File: `RedPear--Personal-Copy-` — key `2fDOIcwXWFZn2BQtEO7dAV`
+File key: `2fDOIcwXWFZn2BQtEO7dAV` (the file still shows the pre-rename product name
+in Figma until it is renamed there — the key is what matters)
 Access is via the **claude.ai Figma MCP connector** (OAuth). No personal access token is needed
 or stored in this repo.
 
 Base URL for a node:
-`https://www.figma.com/design/2fDOIcwXWFZn2BQtEO7dAV/RedPear--Personal-Copy-?node-id=<NODE>&m=dev`
+`https://www.figma.com/design/2fDOIcwXWFZn2BQtEO7dAV/Surebase?node-id=<NODE>&m=dev`
+(the URL slug is cosmetic; Figma resolves on the key)
 
 ### Phase 1 — Dashboard home (7 frames) — **implemented**
 

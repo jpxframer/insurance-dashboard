@@ -7,7 +7,7 @@ import { PolicyCardList } from "@/components/policies/PolicyCardList";
 import { policiesPage } from "@/lib/policies";
 
 export const metadata: Metadata = {
-  title: `${policiesPage.title} · RedPear`,
+  title: `${policiesPage.title} · Surebase`,
   description: policiesPage.meta,
 };
 

@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RedPear — Dashboard",
-  description: "Policy, claims and renewal operations for RedPear insurance teams.",
+  title: "Surebase — Dashboard",
+  description: "Policy, claims and renewal operations for Surebase insurance teams.",
 };
 
 export const viewport: Viewport = {

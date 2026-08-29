@@ -1,4 +1,4 @@
-# Project memory — RedPear Dashboard
+# Project memory — Surebase Dashboard
 
 Handoff notes for picking this up in a fresh session. Read this first, then `AGENTS.md` for the
 frame-by-frame detail.
@@ -10,7 +10,7 @@ built and verified. See **Pick up here** below.
 
 ## What this is
 
-Frontend for the RedPear dashboard — an insurance operations product (policies, claims,
+Frontend for the Surebase Insurance dashboard — an insurance operations product (policies, claims,
 renewals). Built from Figma designs. No backend; all content is mock data.
 
 ## Stack — decided, don't relitigate
@@ -115,7 +115,8 @@ Any dev server from a previous session is gone; restart it.
 
 ## Figma access — read this before trying to open a design
 
-File `RedPear--Personal-Copy-`, key `2fDOIcwXWFZn2BQtEO7dAV`.
+File key `2fDOIcwXWFZn2BQtEO7dAV`. The file still shows the pre-rename product name in
+Figma; the key is what every call uses.
 
 **The MCP connector works as of 2026-08-29** — its tools arrive as deferred tools, so they may
 not appear in the initial list; load them with a tool search before concluding they are missing.
@@ -225,7 +226,7 @@ Only the page content scrolls; the chrome is pinned at both breakpoints.
 - **Don't scale a glyph down from the 24px nav family** — its strokes render far too thin.
   Author each icon at its native box size.
 - The project folder name (`05- Web App`) is not npm-safe, so `create-next-app` had to scaffold
-  elsewhere and be moved in. Package name is `redpear-dashboard`.
+  elsewhere and be moved in. Package name is `surebase-dashboard`.
 
 ## Open security item — raise if still unresolved
 

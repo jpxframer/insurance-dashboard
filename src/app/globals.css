@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 /*
-  RedPear design tokens.
+  Surebase design tokens.
 
   The Figma palette maps almost 1:1 onto Tailwind's default slate/blue/green/amber/red
   ramps, so those are used directly rather than redeclared. Only the values that are
-  genuinely RedPear's — the brand red, the shell metrics, and the card shadow — are
+  genuinely Surebase's — the brand red, the shell metrics, and the card shadow — are
   defined here.
 */
 @theme {

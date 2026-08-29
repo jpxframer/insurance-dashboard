@@ -1,7 +1,7 @@
 /**
  * Mock content for the dashboard home screen.
  *
- * Every string, figure and status here is transcribed from the RedPear Figma
+ * Every string, figure and status here is transcribed from the Surebase Figma
  * frames so the implementation renders exactly what was designed. Swap this
  * module for real API calls without touching the components.
  */
