@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ArrowLeftIcon } from "@/components/icons/ui-icons";
 import { ExportIcon } from "@/components/icons/figma-icons";
+import { MobileStickyBar } from "@/components/layout/MobileStickyBar";
 import {
   analyticsKpis,
   analyticsPage,
@@ -87,39 +88,46 @@ export function AnalyticsTopBar() {
 /**
  * Mobile page header. Analytics is not one of the five mobile tabs, so the
  * frame gives it a back arrow; it returns to the dashboard.
+ *
+ * The title row pins; the range switch scrolls away beneath it.
  */
 export function AnalyticsMobileHeader() {
   const [range, setRange] = useState<string>(analyticsPage.defaultRange);
 
   return (
-    <header className="leading-figma flex flex-col gap-3 border-b border-slate-200 bg-white px-4 pt-3.5 pb-[13px] lg:hidden">
-      <div className="flex items-center gap-2.5">
-        <Link
-          href="/"
-          aria-label="Back"
-          className="grid size-[46px] shrink-0 place-items-center rounded-xl border border-slate-200 text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        >
-          <ArrowLeftIcon className="size-[15px]" />
-        </Link>
+    <>
+      {/* pb is the frame's 12px gap; the border-b eats one. */}
+      <MobileStickyBar className="leading-figma px-4 pt-3.5 pb-[11px]">
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/"
+            aria-label="Back"
+            className="grid size-[46px] shrink-0 place-items-center rounded-xl border border-slate-200 text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          >
+            <ArrowLeftIcon className="size-[15px]" />
+          </Link>
 
-        <div className="flex min-w-0 flex-col gap-px">
-          <h1 className="text-[20px] font-semibold tracking-[-0.2px] text-slate-900">
-            {analyticsPage.title}
-          </h1>
-          <p className="text-[12px] text-slate-400">{analyticsPage.updated}</p>
+          <div className="flex min-w-0 flex-col gap-px">
+            <h1 className="text-[20px] font-semibold tracking-[-0.2px] text-slate-900">
+              {analyticsPage.title}
+            </h1>
+            <p className="text-[12px] text-slate-400">{analyticsPage.updated}</p>
+          </div>
+
+          <button
+            type="button"
+            className="ml-auto flex h-[46px] shrink-0 items-center justify-center gap-[7px] rounded-xl border border-slate-200 bg-white px-4 text-[14px] font-medium whitespace-nowrap text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          >
+            <ExportIcon className="size-[14px]" />
+            {analyticsPage.export}
+          </button>
         </div>
+      </MobileStickyBar>
 
-        <button
-          type="button"
-          className="ml-auto flex h-[46px] shrink-0 items-center justify-center gap-[7px] rounded-xl border border-slate-200 bg-white px-4 text-[14px] font-medium whitespace-nowrap text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        >
-          <ExportIcon className="size-[14px]" />
-          {analyticsPage.export}
-        </button>
+      <div className="leading-figma border-b border-slate-200 bg-white px-4 pb-[13px] lg:hidden">
+        <RangeSwitch value={range} onChange={setRange} variant="mobile" />
       </div>
-
-      <RangeSwitch value={range} onChange={setRange} variant="mobile" />
-    </header>
+    </>
   );
 }
 

@@ -305,8 +305,36 @@ checked one at a time.
    15px and unchecked at 17px, which would jitter the row by 2px on click.
 5. **Export and New policy are both 36px tall.** The frame has them at 36 and
    34; at equal heights they align optically.
-6. **The mobile header scrolls** rather than pinning like the dashboard's — at
-   183px a pinned header would take a fifth of the viewport.
+6. **Only the mobile header's title row pins**, not the whole header. The frame
+   puts all 183px in normal flow, which would cost a fifth of the viewport if
+   pinned; the title row alone is 74px. See *Pinned mobile headers* below.
+
+## Pinned mobile headers
+
+Every page header pins its **title row** to the top on mobile; the rest of the header — search,
+filter chips, range switch, the customer's identity block and its tabs — scrolls away beneath
+it. Added 2026-08-29 at the user's request, overruling the Policies deviation that had the whole
+header scrolling.
+
+`components/layout/MobileStickyBar.tsx` is the primitive, and it settles three things:
+
+- **`sticky`, not the dashboard bar's `fixed`.** The row keeps its place in flow, so no page
+  needs a matching top padding and there is no height constant to keep in sync.
+- **The two blocks are siblings, not nested.** A `sticky` child pins only within its parent's
+  box, so leaving the title row inside its own `<header>` would unpin it the moment that short
+  header scrolled past. Both blocks are direct children of `DashboardShell`'s flex column,
+  which spans the page, so the bar travels the whole way down.
+- **The border is always present and only its colour animates**, via `useScrolled` — the same
+  treatment as `MobileHeader`. At rest it is transparent, leaving the header's own bottom rule
+  as the only line; without that the resting header would carry two rules.
+
+The bar sheds 1px of bottom padding to its border, per the stroke-inside rule, so every header
+stack still measures what it did before: Policies and Customers 183.5, customer detail 267.1,
+Analytics 130. The pinned bars are 72–76px, verified over CDP at 402px along with `top: 0`
+after a 600px scroll and no horizontal overflow.
+
+Claims is the exception. Its mobile header **is** the title row and nothing else, so all of it
+pins with its rule always on, and it uses a plain `sticky top-0 z-30` rather than the primitive.
 
 ## Working notes
 

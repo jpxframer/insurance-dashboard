@@ -8,12 +8,16 @@ import { claimDetail } from "@/lib/claims";
  * The frame gives no destination for the back arrow — there is no mobile claims
  * queue in the design — so it returns to the dashboard. See the deviation note
  * in AGENTS.md.
+ *
+ * This header is the title row and nothing else, so all of it pins and its
+ * bottom rule stays on throughout — there is no second block to scroll out from
+ * under it, which is why it does not need MobileStickyBar's fading border.
  */
 export function ClaimMobileHeader() {
   const { titlePrefix, id, statusLabel, slaShort } = claimDetail;
 
   return (
-    <header className="leading-figma flex flex-col border-b border-slate-200 bg-white px-4 pt-3.5 pb-[15px] lg:hidden">
+    <header className="leading-figma sticky top-0 z-30 flex flex-col border-b border-slate-200 bg-white px-4 pt-3.5 pb-[15px] lg:hidden">
       <div className="flex items-center gap-2.5">
         <Link
           href="/"

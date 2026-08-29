@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { ArrowLeftIcon } from "@/components/icons/ui-icons";
+import { MobileStickyBar } from "@/components/layout/MobileStickyBar";
 import { customerDetail, recordToneClass } from "@/lib/customers";
 import { cn } from "@/lib/cn";
 
@@ -11,6 +12,9 @@ import { cn } from "@/lib/cn";
  * Mobile customer header. Where desktop puts the KPIs beside the name, mobile
  * moves them into a 2x2 grid in the body and gives the actions a full row, with
  * the section tabs as a segmented control.
+ *
+ * The back/title/overflow row pins; the identity, actions and tabs scroll away
+ * beneath it. Pinning down to the tabs would take a third of the viewport.
  */
 export function CustomerDetailMobileHeader() {
   const { name, avatar, statusLabel, mobileMeta, id, actions, tabs } = customerDetail;
@@ -18,96 +22,101 @@ export function CustomerDetailMobileHeader() {
   const [tab, setTab] = useState(mobileTabs[0].id);
 
   return (
-    <header className="leading-figma flex flex-col gap-4 border-b border-slate-200 bg-white px-4 pt-3.5 pb-[15px] lg:hidden">
-      <div className="flex items-center gap-2.5">
-        <Link
-          href="/customers"
-          aria-label="Back to customers"
-          className="grid size-[46px] shrink-0 place-items-center rounded-xl border border-slate-200 text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        >
-          <ArrowLeftIcon className="size-[15px]" />
-        </Link>
+    <>
+      {/* pb is the frame's 16px gap; the border-b eats one. */}
+      <MobileStickyBar className="leading-figma px-4 pt-3.5 pb-[15px]">
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/customers"
+            aria-label="Back to customers"
+            className="grid size-[46px] shrink-0 place-items-center rounded-xl border border-slate-200 text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          >
+            <ArrowLeftIcon className="size-[15px]" />
+          </Link>
 
-        <h1 className="text-[15px] font-semibold text-slate-900">Customer</h1>
+          <h1 className="text-[15px] font-semibold text-slate-900">Customer</h1>
 
-        <button
-          type="button"
-          aria-label="More actions"
-          className="ml-auto grid size-[46px] shrink-0 place-items-center rounded-xl border border-slate-200 text-[16px] text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        >
-          ⋯
-        </button>
-      </div>
+          <button
+            type="button"
+            aria-label="More actions"
+            className="ml-auto grid size-[46px] shrink-0 place-items-center rounded-xl border border-slate-200 text-[16px] text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          >
+            ⋯
+          </button>
+        </div>
+      </MobileStickyBar>
 
-      <div className="flex items-center gap-[13px] pt-0.5">
-        <Image
-          src={avatar}
-          alt=""
-          width={56}
-          height={56}
-          className="size-14 shrink-0 rounded-full object-cover"
-        />
-        <div className="flex min-w-0 flex-col gap-0.5">
-          <div className="flex flex-wrap items-center gap-x-[7px]">
-            <span className="text-[19px] font-semibold tracking-[-0.19px] text-slate-900">
-              {name}
-            </span>
-            <span className="flex items-center gap-1 rounded-[20px] border border-green-200 bg-green-50 px-2 py-[3px]">
-              <span aria-hidden className="size-1 rounded-full bg-green-600" />
-              <span className="text-[10.5px] font-medium whitespace-nowrap text-green-700">
-                {statusLabel}
+      <div className="leading-figma flex flex-col gap-4 border-b border-slate-200 bg-white px-4 pb-[15px] lg:hidden">
+        <div className="flex items-center gap-[13px] pt-0.5">
+          <Image
+            src={avatar}
+            alt=""
+            width={56}
+            height={56}
+            className="size-14 shrink-0 rounded-full object-cover"
+          />
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <div className="flex flex-wrap items-center gap-x-[7px]">
+              <span className="text-[19px] font-semibold tracking-[-0.19px] text-slate-900">
+                {name}
               </span>
-            </span>
+              <span className="flex items-center gap-1 rounded-[20px] border border-green-200 bg-green-50 px-2 py-[3px]">
+                <span aria-hidden className="size-1 rounded-full bg-green-600" />
+                <span className="text-[10.5px] font-medium whitespace-nowrap text-green-700">
+                  {statusLabel}
+                </span>
+              </span>
+            </div>
+            <p className="truncate text-[12px] text-slate-400">
+              {mobileMeta}
+              <span className="tnum font-mono text-[11px]">{id}</span>
+            </p>
           </div>
-          <p className="truncate text-[12px] text-slate-400">
-            {mobileMeta}
-            <span className="tnum font-mono text-[11px]">{id}</span>
-          </p>
+        </div>
+
+        <div className="flex gap-2 pt-0.5">
+          <button
+            type="button"
+            className="gloss-blue h-11 flex-1 rounded-xl bg-blue-600 text-[14px] font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          >
+            {actions.message}
+          </button>
+          <button
+            type="button"
+            className="h-[46px] flex-1 rounded-xl border border-slate-200 bg-white text-[14px] font-medium text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          >
+            {actions.newPolicy}
+          </button>
+        </div>
+
+        <div
+          role="tablist"
+          className="flex w-full gap-0.5 rounded-[11px] bg-slate-100 p-[3px]"
+        >
+          {mobileTabs.map((item) => {
+            const active = item.id === tab;
+
+            return (
+              <button
+                key={item.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setTab(item.id)}
+                className={cn(
+                  "flex-1 rounded-[9px] py-2 text-center text-[12.5px] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600",
+                  active
+                    ? "bg-white font-semibold text-slate-900 shadow-[0_1px_1px_rgba(15,23,42,0.08)]"
+                    : "font-medium text-slate-500",
+                )}
+              >
+                {item.mobileLabel}
+              </button>
+            );
+          })}
         </div>
       </div>
-
-      <div className="flex gap-2 pt-0.5">
-        <button
-          type="button"
-          className="gloss-blue h-11 flex-1 rounded-xl bg-blue-600 text-[14px] font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        >
-          {actions.message}
-        </button>
-        <button
-          type="button"
-          className="h-[46px] flex-1 rounded-xl border border-slate-200 bg-white text-[14px] font-medium text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        >
-          {actions.newPolicy}
-        </button>
-      </div>
-
-      <div
-        role="tablist"
-        className="flex w-full gap-0.5 rounded-[11px] bg-slate-100 p-[3px]"
-      >
-        {mobileTabs.map((item) => {
-          const active = item.id === tab;
-
-          return (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => setTab(item.id)}
-              className={cn(
-                "flex-1 rounded-[9px] py-2 text-center text-[12.5px] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600",
-                active
-                  ? "bg-white font-semibold text-slate-900 shadow-[0_1px_1px_rgba(15,23,42,0.08)]"
-                  : "font-medium text-slate-500",
-              )}
-            >
-              {item.mobileLabel}
-            </button>
-          );
-        })}
-      </div>
-    </header>
+    </>
   );
 }
 
