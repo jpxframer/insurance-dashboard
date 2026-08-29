@@ -1,4 +1,5 @@
 import { statusLabels, type ClaimStatus } from "@/lib/data";
+import { cn } from "@/lib/cn";
 
 /** Claim-status pill colours, read off the Figma frames. */
 const STATUS_CLASS: Record<ClaimStatus, string> = {
@@ -9,10 +10,29 @@ const STATUS_CLASS: Record<ClaimStatus, string> = {
   new: "border-slate-200 bg-slate-50 text-slate-600",
 };
 
-export function StatusPill({ status }: { status: ClaimStatus }) {
+/**
+ * `sm` is the claims-queue rail, where the same pill is drawn a size smaller
+ * and semibold to hold up at 10.5px.
+ */
+const SIZE_CLASS = {
+  md: "px-2.5 py-1 text-[11.5px] font-medium",
+  sm: "px-[7px] py-0.5 text-[10.5px] font-semibold",
+} as const;
+
+export function StatusPill({
+  status,
+  size = "md",
+}: {
+  status: ClaimStatus;
+  size?: keyof typeof SIZE_CLASS;
+}) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11.5px] font-medium ${STATUS_CLASS[status]}`}
+      className={cn(
+        "inline-flex shrink-0 items-center rounded-full border whitespace-nowrap",
+        SIZE_CLASS[size],
+        STATUS_CLASS[status],
+      )}
     >
       {statusLabels[status]}
     </span>

@@ -23,13 +23,15 @@ export function DashboardShell({
   children: ReactNode;
   activeId?: string;
   /**
-   * Replaces the dashboard's greeting bar in the 57px desktop slot. The
+   * Replaces the dashboard's greeting bar in the 57px desktop slot; pass null
+   * for a page that owns the whole area right of the sidebar. The
    * Policies frames put a page title and its actions there instead, so the
    * header is the page's to supply — the shell only owns the slot.
    */
   topBar?: ReactNode;
   /**
-   * Replaces the mobile logo bar and the greeting beneath it. Pages that pass
+   * Replaces the mobile logo bar and the greeting beneath it; null renders
+   * neither. Pages that pass
    * this lose the notifications and account overlays, which is what the
    * Policies mobile frame shows.
    */
@@ -59,15 +61,17 @@ export function DashboardShell({
       <Sidebar collapsed={collapsed} onToggle={toggleSidebar} activeId={activeId} />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        {topBar ?? (
+        {topBar === undefined ? (
           <TopBar
             notificationsOpen={notificationsOpen}
             onNotificationsToggle={toggleNotifications}
             onNotificationsClose={closeNotifications}
           />
+        ) : (
+          topBar
         )}
 
-        {mobileHeader ?? (
+        {mobileHeader === undefined ? (
           <>
             <MobileHeader
               notificationsOpen={notificationsOpen}
@@ -81,6 +85,8 @@ export function DashboardShell({
             {/* Scrolls away under the fixed bar above it. */}
             <MobileGreeting />
           </>
+        ) : (
+          mobileHeader
         )}
 
         <main className="flex-1 pb-[75px] lg:pb-0">{children}</main>

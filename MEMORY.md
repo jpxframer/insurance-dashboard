@@ -3,8 +3,8 @@
 Handoff notes for picking this up in a fresh session. Read this first, then `AGENTS.md` for the
 frame-by-frame detail.
 
-**Last updated:** 2026-08-29 — Phase 1 complete; Phase 2 started, Policies (2 of 10 frames)
-built and verified. See **Pick up here** below.
+**Last updated:** 2026-08-29 — Phase 1 complete; Phase 2 has Policies and Claims done (4 of 10
+frames). Renamed to Surebase, new logo in. See **Pick up here** below.
 
 ---
 
@@ -31,14 +31,7 @@ generated type, not a mistake.
 **Clean point.** Working tree is clean, `main` is in sync with `origin/main`, nothing is
 half-finished.
 
-**One open decision, awaiting the user:**
-
-> The last commit, `67e666e`, carries a `Co-Authored-By: Claude Opus 5` trailer — a direct
-> violation of the sole-author rule under *Repo* below, and it is already pushed to a public
-> repo. Fixing it means amending the message and force-pushing `main`. The user has been told
-> and has not yet decided. Don't force-push without an explicit go-ahead.
-
-**Next piece of work: the 8 remaining Phase 2 frames.** Node IDs are in `AGENTS.md`. The user
+**Next piece of work: the 6 remaining Phase 2 frames.** Node IDs are in `AGENTS.md`. The user
 sequences work deliberately — confirm which screen is next rather than assuming.
 
 **The Figma MCP tools now work.** As of 2026-08-29 they load as deferred tools and the whole
@@ -55,7 +48,7 @@ Delivered, in order:
 - **Shell scroll model** (`b81ade9`) — desktop sidebar pinned to one viewport height; mobile top
   bar fixed like the bottom tab bar with a scroll-reactive border. Details in *Shell scroll
   model* below. Verified by measuring in a real browser, not by eye.
-- **Overlay rebuild** (`67e666e`) — the desktop notifications popover, its mobile counterpart and
+- **Overlay rebuild** (`734278a`) — the desktop notifications popover, its mobile counterpart and
   the mobile account menu were re-derived from their own Figma **component** nodes, which carry
   geometry the composed frames hide. This corrected real errors, including a desktop popover 33%
   too wide (418px → 314px). Glyphs are now authored at native box sizes in `figma-icons.tsx`;
@@ -65,10 +58,15 @@ Delivered, in order:
 - **`MEMORY.md` + `AGENTS.md`** as the two handoff docs.
 - **Public GitHub repo** (below).
 
-**Phase 2 — Policies done (2 of 10 frames), 8 remaining.** `/policies` implements desktop
+**Phase 2 — Policies and Claims done (4 of 10 frames), 6 remaining.** `/policies` implements desktop
 `20875-31238` and mobile `20875-31629`: a nine-column table with working row selection, bulk
 bar and density toggle, and a card list on mobile. Measured in-browser against the frames;
 numbers and the six deliberate deviations are in `AGENTS.md`.
+
+`/claims` implements desktop `20875-31762` and mobile `20875-32146`. These two frames are
+**not** the same content at two widths: desktop pairs a 266px queue rail with one claim’s
+detail, mobile shows the detail alone. So the page passes `topBar={null}` and owns everything
+right of the sidebar. All four mobile cards match the frame exactly (211 / 238 / 278 / 156).
 
 Two things that came out of it and will bite again:
 
@@ -78,14 +76,20 @@ Two things that came out of it and will bite again:
 - `.leading-figma` in `globals.css` pins line-height to Figma's 1.21. Tailwind v4 defaults an
   arbitrary `text-[13px]` to 1.5 and CSS `normal` is 1.333 for Geist — both inflate every
   measured row. Put it on a subtree root for any new screen built from these frames.
+- **The ratio is per-frame, though.** Claims mobile measures ~1.33, and its cards came out 8-9px
+  short until each text node got an explicit `leading-`. Read the frame’s own text-box heights
+  with `get_metadata` before trusting either number.
 
 ## Repo
 
 **https://github.com/jpxframer/insurance-dashboard** — public, default branch `main`,
 remote `origin` already configured.
 
-Commits so far: `create-next-app` scaffold → `e60c49e` Phase 1 implementation → `b81ade9` shell
-scroll fixes → `316146c` handoff notes → `67e666e` overlay rebuild.
+**History was rewritten once, on 2026-08-29.** A `Co-Authored-By: Claude` trailer had gone in on
+the overlay-rebuild commit and was listing Claude as a contributor on GitHub. The fix rebuilt the
+last two commits with cherry-picks onto a scratch branch, verified the result was tree-identical
+to what had been pushed, then force-pushed. **Commit SHAs after `316146c` all changed** — the
+overlay rebuild is now `734278a`, not `67e666e`. Every commit shows `jpxframer` alone.
 
 **The user is the sole author and contributor, and it must stay that way.** They asked
 explicitly for no Claude attribution. Do **not** add `Co-Authored-By`, "Generated with", or any
@@ -96,8 +100,8 @@ line. Verify after committing:
 git log -1 --format=%B | grep -iE "co-authored|claude|anthropic|generated with"
 ```
 
-**This check was skipped on `67e666e` and the trailer went in.** Run it every time; see the open
-decision under *Pick up here*.
+**This check was skipped once and the trailer went in**, which cost a history rewrite and a
+force-push to undo. Run it every time.
 
 ## Previewing your work
 

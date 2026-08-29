@@ -122,7 +122,10 @@ Two rendering notes worth keeping:
 panel, `DashboardShell` holds the nav state and the optional page-header slots).
 `src/components/dashboard/` is one file per card; `src/components/policies/` is the Policies
 screen, with `PoliciesDesktop` owning selection and density so the page stays a server component.
-`src/lib/policies.ts` mirrors `data.ts` for that screen.
+`src/components/claims/` is the Claims screen — the queue rail, the detail cards (each taking a
+`variant` since the two frames differ in more than size) and the mobile-only summary and action
+bar. `src/lib/policies.ts` and `src/lib/claims.ts` mirror `data.ts` for those screens; Claims
+reuses `ClaimStatus` and `StatusPill` from the dashboard rather than redeclaring them.
 `src/lib/data.ts` holds every string and figure transcribed from the frames — swap it for real
 API calls without touching components. Nav icons in `src/components/icons/figma-icons.tsx` were
 exported from Figma and recoloured to `currentColor`; the generic ones are hand-drawn to match.
@@ -150,8 +153,49 @@ Measured geometry, verified in-browser via CDP:
 - Mobile: header 183.5px (frame 183), cards 370×107.2 on a 114px pitch (frame
   106/114), content starting at 197.5 (frame 197).
 
-Remaining 8 frames: `20875-33493`, `20875-33812`, `20875-31762`, `20875-32146`,
-`20875-32342`, `20875-32812`, `20875-33178`, `20875-33328`.
+Remaining 6 frames: `20875-33493`, `20875-33812`, `20875-32342`, `20875-32812`,
+`20875-33178`, `20875-33328`.
+
+### Phase 2 — Claims (4 of 10 frames) — **implemented**
+
+| Node ID       | Figma name    | Size      | What it is                          |
+| ------------- | ------------- | --------- | ----------------------------------- |
+| `20875-31762` | Claims        | 1440x900  | Queue rail + one claim, side by side |
+| `20875-32146` | Claims Mobile | 402x1301  | The claim detail alone              |
+
+Unlike Policies, these are **not** the same content at two widths. Desktop pairs a 266px
+queue rail with a claim detail; mobile drops the queue entirely and shows only the detail.
+The rail starts at the top of the viewport, so the page passes `topBar={null}` and owns
+everything right of the sidebar.
+
+Measured in-browser against the frames:
+
+- Queue rail 266 x 900 at x=236; detail header 938 x 98.5; aside 280; left cards 594.
+- Mobile page 1248 tall — exactly the frame’s 1301 less its 53px iOS status bar — with the
+  four cards at **211 / 238 / 278 / 156.0** against the frame’s 211 / 238 / 278 / 156.125.
+- Mobile action bar 402 x 142, fixed above the tab bar.
+
+#### Leading is per-node, not per-file
+
+The Policies frames sat at ~1.21, which is what `.leading-figma` pins. **The Claims mobile
+frame does not**: its text boxes measure ~1.33 (a 13.5px title in an 18px box, 12.5px in 16px,
+15px in 20px). Cards came out 8-9px short until each of those was given an explicit `leading-`.
+Check a frame’s own text-box heights with `get_metadata` before trusting either ratio.
+
+`get_metadata` on a container is the cheap way to do it — it returns exact x/y/w/h per child
+without pulling a 100KB tree into context, and it is how the four card heights above were
+checked one at a time.
+
+### Claims deviations from the frames
+
+1. **No mobile queue exists.** The mobile frame is the detail with a back arrow, but no mobile
+   claims list is designed. The arrow returns to the dashboard.
+2. **Only CLM-8241 is designed.** Selecting another queue row moves the highlight; the detail
+   stays put. Nothing else has data to show.
+3. **Queue filter chips and both search fields carry their states but do not filter** — same
+   reason as Policies.
+4. **Mobile drops a sentence from the internal note.** That is the frame’s own copy, kept as
+   authored, so the note holds its designed three lines.
 
 ### Two things this screen taught
 
