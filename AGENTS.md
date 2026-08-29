@@ -605,6 +605,21 @@ Verified in-browser: shell #020617, sidebar and cards #0f172a, headings #f8fafc 
 values exactly; light mode unchanged at #f8fafc / #ffffff; and both pickers persist across a
 reload.
 
+## Two breakpoints, one popover state
+
+`TopBar` and `MobileHeader` are **both mounted at every width** — one is only hidden by CSS —
+and both call `useDismissable` against the same `notificationsOpen`. The hidden one read a press
+on the *visible* bell as an outside press and closed, after which the visible button's own
+onClick toggled it straight back open. The panel opened on the first click and could never be
+dismissed by clicking the bell again.
+
+`useDismissable` now sits out when its own popover has no client rects. Use
+`getClientRects().length`, not `offsetParent`: the latter is null for fixed elements too, and
+the mobile panel lives inside a fixed header.
+
+The lesson generalises — **any state shared across two breakpoints has two live listeners**, and
+the one that cannot see the event must not act on it.
+
 ## Working notes
 
 - Next.js 16 differs from older training data — read `node_modules/next/dist/docs/` before

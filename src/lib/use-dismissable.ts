@@ -9,6 +9,8 @@ import { useEffect, useRef } from "react";
  * `ignore` is for the trigger button: without it, clicking the trigger while
  * open would close via this handler and immediately reopen via the button's
  * own onClick.
+ *
+ * An instance whose popover is not visible does nothing — see `onPointerDown`.
  */
 export function useDismissable<T extends HTMLElement>(
   open: boolean,
@@ -25,8 +27,22 @@ export function useDismissable<T extends HTMLElement>(
     }
 
     function onPointerDown(event: PointerEvent) {
+      const el = ref.current;
+
+      /*
+        Both breakpoints' headers stay mounted — one is only hidden by CSS — so
+        two of these can be live against a single piece of open state. The
+        hidden one must sit out: its trigger is not the button being pressed, so
+        it reads every press as "outside" and closes, and the visible button's
+        own onClick then toggles straight back open. The popover appears stuck.
+
+        `getClientRects` is empty for a `display: none` subtree and works for
+        fixed elements, where `offsetParent` does not.
+      */
+      if (!el || el.getClientRects().length === 0) return;
+
       const target = event.target as Node;
-      if (ref.current?.contains(target)) return;
+      if (el.contains(target)) return;
       if (ignore?.current?.contains(target)) return;
       onClose();
     }
