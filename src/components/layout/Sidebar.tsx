@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Logo } from "./Logo";
 import { ChevronsLeftIcon } from "@/components/icons/figma-icons";
 import { currentUser } from "@/lib/data";
 import { primaryNav, secondaryNav, type NavItem } from "@/lib/nav";
@@ -90,15 +91,13 @@ export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
           collapsed ? "justify-center" : "justify-between px-3",
         )}
       >
-        <Link href="/" className="flex items-center rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
-          <Image
-            src="/brand/redpear-logo.svg"
-            alt="RedPear"
-            width={46}
-            height={32}
-            priority
-            className="h-8 w-auto"
-          />
+        <Link
+          href="/"
+          aria-label="SureBase"
+          className="flex items-center rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        >
+          {/* Collapsed drops the wordmark — Figma 22777-850. */}
+          <Logo showWordmark={!collapsed} />
         </Link>
 
         {!collapsed ? (

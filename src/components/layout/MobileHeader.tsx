@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useRef } from "react";
+import { Logo } from "./Logo";
 import {
   AnalyticsIcon,
   MenuChevronIcon,
@@ -72,15 +73,12 @@ export function MobileHeader({
       style={{ height: BAR_H }}
     >
       <div className="flex h-full items-center justify-between px-5">
-        <Link href="/" className="rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
-          <Image
-            src="/brand/redpear-logo.svg"
-            alt="RedPear"
-            width={46}
-            height={32}
-            priority
-            className="h-9 w-auto"
-          />
+        <Link
+          href="/"
+          aria-label="SureBase"
+          className="rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        >
+          <Logo />
         </Link>
 
         <div className="flex items-center gap-3">

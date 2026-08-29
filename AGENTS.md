@@ -56,6 +56,24 @@ Two things worth knowing:
 So the seven frames are **three states of one shell** (sidebar expanded/collapsed, notifications,
 account menu) over **one page** — which is how it is built.
 
+### Brand mark
+
+| Node ID       | What                     | Size                           |
+| ------------- | ------------------------ | ------------------------------ |
+| `22777-843`   | Full lockup              | 32px tile + 8px gap + wordmark |
+| `22777-850`   | Mark only, collapsed nav | 32px tile                      |
+
+Built as `components/layout/Logo.tsx`, not an asset: the tile, its gloss and the wordmark are
+CSS, so only the logomark glyph is SVG. It is inlined at its native 17.333px box and recoloured
+to `currentColor`.
+
+Two notes:
+
+- The frame drops the 17.333px glyph into a 16px clipped box, shaving 1.33px off its right and
+  bottom. It is scaled to fit instead — cropping a logomark reads as a bug, not a decision.
+- The mark is **blue-600 with the gloss treatment**, i.e. the UI palette. The old brand-red
+  token is gone; it was declared but never referenced.
+
 ### Measured shell metrics
 
 Sidebar 236px expanded / 79px collapsed · top bar 57px · content padding 18/24/20/24 · grid gap

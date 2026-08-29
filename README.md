@@ -77,11 +77,8 @@ why, and how.
 
 ## Naming
 
-The product was previously called RedPear. The rename to Surebase is done across the code,
-the package, the page metadata and these documents.
+The product was previously called RedPear. The rename to Surebase is complete across the code,
+the package, the page metadata, the logo and these documents.
 
-Two things still carry the old branding and are waiting on new artwork:
-
-- **The logo** (`public/brand/redpear-logo.svg`) is an outlined SVG that draws the old name, so
-  it cannot be renamed — only replaced. It is referenced from the sidebar and the mobile header.
-- **The Figma file** still displays the old product name; only its key is used in code.
+One loose end, outside the repo: the **Figma file** still displays the old product name. Only
+its key is referenced here, so nothing breaks either way.

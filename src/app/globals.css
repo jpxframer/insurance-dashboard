@@ -5,15 +5,17 @@
 
   The Figma palette maps almost 1:1 onto Tailwind's default slate/blue/green/amber/red
   ramps, so those are used directly rather than redeclared. Only the values that are
-  genuinely Surebase's — the brand red, the shell metrics, and the card shadow — are
-  defined here.
+  genuinely Surebase's — the shell metrics, the radii and the card shadow — are defined
+  here.
 */
 @theme {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  /* Brand — the logo red. Not part of the UI palette. */
-  --color-brand: #f40b0d;
+  /*
+    No brand colour token: the Surebase mark is built from the UI palette's own
+    blue-600 plus the gloss treatment, so there is nothing left outside it.
+  */
 
   /* Shell metrics, measured from the Figma frames. */
   --spacing-sidebar: 236px;
