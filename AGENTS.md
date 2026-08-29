@@ -400,6 +400,20 @@ with a `gap-4` to its label — the frame puts the icon at x=16 and the label 40
 
 Only the **desktop** rail changed. The mobile tab bar and the account menu are untouched.
 
+#### The user card is the way into Profile
+
+`22783-3173` is a plain block in every frame that contains it, Profile's own included, so it
+carries no designed hover or active state. It is nonetheless the only route to Profile on
+desktop — Profile is not a nav item — so the card is a `Link` to `/profile`, and **the active
+wash is invented at the user's direction**: `bg-blue-50` across the card, deliberately *not* the
+`gloss-blue` the nav links carry, so it reads as "you are here" without competing with the
+section you are in. It stays full-bleed because that is the card's own geometry; the nav links
+are inset and rounded, this one is not.
+
+`/profile` therefore passes `activeId="profile"`, which lights the card and leaves every link in
+the list unlit. It used to borrow Settings' highlight, which said you were somewhere you were
+not. The card's gap is 10px, per the frame — the shell had 12.
+
 ### Phase 3 — Settings and Profile (3 frames) — **implemented**
 
 | Node ID       | Figma name        | Size      | What it is                          |

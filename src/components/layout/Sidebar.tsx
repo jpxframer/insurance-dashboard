@@ -86,6 +86,10 @@ function NavLink({
  * between Settings and the card, which is where the frame puts it.
  */
 export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
+  // Profile is not a nav item; it is reached from the user card, so the card
+  // carries the current-page state instead of any link in the list.
+  const profileActive = activeId === "profile";
+
   return (
     <aside
       className={cn(
@@ -181,11 +185,24 @@ export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
         </ul>
       </nav>
 
-      {/* User card */}
-      <div
+      {/*
+        User card — Figma `22783-3173`, and the way into Profile on desktop.
+
+        The frame draws it as a plain block in every screen, including Profile
+        itself, so **the active wash is invented**: blue-50 across the card,
+        deliberately not the `gloss-blue` the nav links carry, so it reads as
+        "you are here" without competing with the section you are in. It stays
+        full-bleed because that is the card's own geometry — the nav links are
+        inset and rounded, this one is not.
+      */}
+      <Link
+        href="/profile"
+        aria-current={profileActive ? "page" : undefined}
+        title={collapsed ? currentUser.name : undefined}
         className={cn(
-          "flex shrink-0 items-center border-t border-slate-200",
-          collapsed ? "-mx-4 justify-center px-4 py-[14px]" : "gap-3 px-4 py-[14px]",
+          "flex shrink-0 items-center border-t border-slate-200 transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600",
+          collapsed ? "-mx-4 justify-center px-4 py-[14px]" : "gap-2.5 px-4 py-[14px]",
+          profileActive ? "bg-blue-50" : "hover:bg-slate-50",
         )}
       >
         <Image
@@ -195,7 +212,9 @@ export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
           height={34}
           className="size-[34px] shrink-0 rounded-full object-cover"
         />
-        {!collapsed ? (
+        {collapsed ? (
+          <span className="sr-only">{currentUser.name}</span>
+        ) : (
           <div className="min-w-0">
             <p className="truncate text-[13px] leading-[17px] font-semibold text-slate-900">
               {currentUser.name}
@@ -204,8 +223,8 @@ export function Sidebar({ collapsed, onToggle, activeId }: SidebarProps) {
               {currentUser.role}
             </p>
           </div>
-        ) : null}
-      </div>
+        )}
+      </Link>
     </aside>
   );
 }

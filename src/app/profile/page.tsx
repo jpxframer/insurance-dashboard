@@ -14,13 +14,14 @@ export const metadata: Metadata = {
  * mobile view was designed here, and the Settings account row is the way in.
  *
  * The identity header starts at the top of the viewport, so this page passes
- * `topBar={null}` and owns everything right of the sidebar. Profile is not a
- * nav item, so `activeId` leaves Settings lit — it is the section this sits
- * under.
+ * `topBar={null}` and owns everything right of the sidebar.
+ *
+ * Profile is not a nav item — the sidebar's user card is the way in, and it
+ * carries the current-page state, so no link in the list is lit here.
  */
 export default function ProfileRoutePage() {
   return (
-    <DashboardShell activeId="settings" topBar={null} mobileHeader={null}>
+    <DashboardShell activeId="profile" topBar={null} mobileHeader={null}>
       <ProfileDesktop />
       <ProfileMobile />
     </DashboardShell>
