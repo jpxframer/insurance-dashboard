@@ -60,7 +60,7 @@ account menu) over **one page** — which is how it is built.
 
 | Node ID       | What                     | Size                           |
 | ------------- | ------------------------ | ------------------------------ |
-| `22777-843`   | Full lockup              | 32px tile + 8px gap + wordmark |
+| `22777-843`   | Full lockup              | 32px tile + 8px gap + 24px wordmark |
 | `22777-850`   | Mark only, collapsed nav | 32px tile                      |
 
 Built as `components/layout/Logo.tsx`, not an asset: the tile, its gloss and the wordmark are

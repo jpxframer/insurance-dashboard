@@ -25,8 +25,8 @@ function SurebaseMark(props: SVGProps<SVGSVGElement>) {
  * Surebase lockup — Figma `22777-843` (full) and `22777-850` (mark only).
  *
  * Both nodes are the same 32px tile; the full lockup adds an 8px gap and the
- * wordmark. The collapsed sidebar uses the mark on its own, which is exactly
- * what `22777-850` is for.
+ * 24px wordmark. The collapsed sidebar uses the mark on its own, which is
+ * exactly what `22777-850` is for.
  *
  * The tile carries the design system's "Gloss Dashboard" treatment, already in
  * `globals.css` as `.gloss-blue` from the Policies buttons.
@@ -45,7 +45,7 @@ export function Logo({
       </span>
 
       {showWordmark ? (
-        <span className="text-[16px] leading-none font-semibold whitespace-nowrap text-slate-900">
+        <span className="text-[24px] leading-none font-semibold whitespace-nowrap text-slate-900">
           SureBase
         </span>
       ) : null}
