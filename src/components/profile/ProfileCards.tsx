@@ -12,6 +12,7 @@ import {
   profilePreferences,
   profileSecurity,
 } from "@/lib/profile";
+import { useThemePreference, type ThemePreference } from "@/lib/theme";
 import { cn } from "@/lib/cn";
 
 type Variant = "desktop" | "mobile";
@@ -83,7 +84,7 @@ export function PersonalInfoCard({ variant = "desktop" }: { variant?: Variant })
 /** Theme, table density and the two notification switches. */
 export function ProfilePreferencesCard({ variant = "desktop" }: { variant?: Variant }) {
   const mobile = variant === "mobile";
-  const [theme, setTheme] = useState(profilePreferences.theme.value);
+  const { preference, choose } = useThemePreference();
   const [density, setDensity] = useState(profilePreferences.density.value);
   const [toggles, setToggles] = useState(() =>
     Object.fromEntries(profilePreferences.toggles.map((t) => [t.id, t.on])),
@@ -100,8 +101,8 @@ export function ProfilePreferencesCard({ variant = "desktop" }: { variant?: Vari
           control={
             <SegmentedControl
               options={profilePreferences.theme.options}
-              value={theme}
-              onChange={setTheme}
+              value={preference}
+              onChange={(id) => choose(id as ThemePreference)}
               label={profilePreferences.theme.title}
               stretch={mobile}
             />

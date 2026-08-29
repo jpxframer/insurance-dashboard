@@ -86,3 +86,81 @@
     display: none;
   }
 }
+
+/*
+  Dark mode — Figma `22795-1045`, colour styles only. Content is untouched.
+
+  The frame's palette is the slate ramp read back to front: the page is
+  slate-950 (#020617), every surface is slate-900 (#0f172a), and blue-600 is
+  unchanged. So rather than adding a `dark:` class to forty components, the
+  theme's own tokens are redefined here and the existing utilities follow —
+  Tailwind v4 compiles `bg-slate-50` to `var(--color-slate-50)`.
+
+  Sampled from the frame: page #020617, sidebar/top bar/cards #0f172a, inner
+  cards #020617, active nav #2563eb, search field ~#1e293b.
+*/
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* The neutral ramp, inverted. */
+  --color-slate-50: #020617;
+  --color-slate-100: #172033;
+  --color-slate-200: #1e293b;
+  --color-slate-300: #334155;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #94a3b8;
+  --color-slate-600: #cbd5e1;
+  --color-slate-700: #e2e8f0;
+  --color-slate-800: #f1f5f9;
+  --color-slate-900: #f8fafc;
+  --color-slate-950: #ffffff;
+
+  /* Accent tints. The 600s stay put — the frame keeps blue-600 for fills. */
+  --color-blue-50: #172554;
+  --color-blue-100: #1e3a8a;
+  --color-blue-200: #1e40af;
+  --color-green-50: #052e16;
+  --color-green-200: #14532d;
+  --color-green-700: #4ade80;
+  --color-amber-50: #451a03;
+  --color-amber-200: #78350f;
+  --color-amber-700: #fbbf24;
+  --color-red-50: #450a0a;
+  --color-red-200: #7f1d1d;
+  --color-red-600: #f87171;
+  --color-red-700: #f87171;
+
+  /* A shadow on a dark ground has to be darker than the ground, not softer. */
+  --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow-pop: 0 12px 32px -8px rgb(0 0 0 / 0.6), 0 2px 8px -2px rgb(0 0 0 / 0.4);
+}
+
+@layer utilities {
+  /*
+    Four utilities that must not follow the ramp.
+
+    `white` is both a surface (`bg-white` on every card) and a foreground
+    (`text-white` on blue buttons). Inverting the token would fix the first and
+    ruin the second, so the surface is remapped on its own and white stays
+    white. `text-blue-600` gets lifted because blue-600 on slate-900 is too
+    close to read, while `bg-blue-600` has to stay exactly the frame's fill.
+  */
+  [data-theme="dark"] .bg-white {
+    background-color: #0f172a;
+  }
+
+  [data-theme="dark"] .ring-white {
+    --tw-ring-color: #0f172a;
+  }
+
+  [data-theme="dark"] .text-blue-600 {
+    color: #60a5fa;
+  }
+
+  /* Fields sit *above* their card in the frame, not below it. */
+  [data-theme="dark"] input,
+  [data-theme="dark"] textarea,
+  [data-theme="dark"] select {
+    background-color: #1e293b;
+  }
+}

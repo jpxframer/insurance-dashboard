@@ -13,6 +13,7 @@ import {
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Toggle } from "@/components/ui/Toggle";
 import { settingsMobile } from "@/lib/settings";
+import { useThemePreference, type ThemePreference } from "@/lib/theme";
 import { cn } from "@/lib/cn";
 
 const ROW_ICONS = {
@@ -95,7 +96,7 @@ function Row({
 
 export function SettingsMobile() {
   const { account, preferences, workspace, support } = settingsMobile;
-  const [theme, setTheme] = useState(preferences.themeOptions[0].id);
+  const { preference, choose } = useThemePreference();
   const [toggles, setToggles] = useState(() =>
     Object.fromEntries(preferences.toggles.map((t) => [t.id, t.on])),
   );
@@ -139,8 +140,8 @@ export function SettingsMobile() {
           </span>
           <SegmentedControl
             options={preferences.themeOptions}
-            value={theme}
-            onChange={setTheme}
+            value={preference}
+            onChange={(id) => choose(id as ThemePreference)}
             label={preferences.themeLabel}
           />
         </Row>

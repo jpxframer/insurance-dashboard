@@ -153,7 +153,7 @@ export const settingsMobile = {
     themeOptions: [
       { id: "light", label: "Light" },
       { id: "dark", label: "Dark" },
-      { id: "auto", label: "Auto" },
+      { id: "system", label: "Auto" },
     ],
     toggles: [
       { id: "push", label: "Push notifications", on: true },

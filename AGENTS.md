@@ -565,6 +565,46 @@ timestamps are mock content in the same sense as the rest of `lib/` — but unli
 were not read off a frame. Header actions vary with the tag (a claim opens a claim, a renewal
 opens a policy, an untagged thread offers only Archive), which is also invented.
 
+## Dark mode
+
+Figma `22795-1045`, **colour styles only** — no content differs between the two themes.
+
+Sampled from the frame, the palette is the slate ramp read back to front: page **#020617**
+(slate-950), every surface **#0f172a** (slate-900), inner cards back to #020617, fields ~#1e293b,
+and **blue-600 unchanged** at #2563eb. So the theme is implemented by redefining the tokens
+rather than by adding a `dark:` class to forty components — Tailwind v4 compiles `bg-slate-50`
+to `var(--color-slate-50)`, so inverting the ramp under `[data-theme="dark"]` carries the whole
+app. The block lives at the foot of `globals.css`.
+
+Four utilities must not follow the ramp, and are overridden by hand:
+
+- `white` is both a surface (`bg-white` on every card) and a foreground (`text-white` on blue
+  buttons). Inverting the token fixes the first and ruins the second, so `.bg-white` is remapped
+  on its own and white stays white. `.ring-white` goes with it.
+- `.text-blue-600` lifts to #60a5fa — blue-600 on slate-900 is too close to read — while
+  `bg-blue-600` keeps the frame's exact fill.
+- `input`, `textarea` and `select` take #1e293b, because fields sit *above* their card in the
+  frame rather than below it.
+
+### How it is driven
+
+`lib/theme.ts` owns the preference (`light` | `dark` | `system`, in localStorage under
+`surebase-theme`) and stamps the resolved value on `<html>` as `data-theme`. Three things worth
+knowing:
+
+- **`useSyncExternalStore`, not state in an effect.** The preference is an external store; this
+  is what reads one without a hydration mismatch. The server snapshot is `system`, so markup
+  matches.
+- **`THEME_INIT_SCRIPT` runs before first paint**, inlined in `<head>`. Without it the page
+  paints light and then flips. `<html>` carries `suppressHydrationWarning` for the same reason.
+- **Both pickers write the same key.** Settings mobile labels the third option "Auto" and
+  Profile desktop labels it "System"; both store `system`, and a `surebase:theme` event keeps
+  every mounted picker in step. Changing the OS setting re-resolves while `system` is selected.
+
+Verified in-browser: shell #020617, sidebar and cards #0f172a, headings #f8fafc — the frame's
+values exactly; light mode unchanged at #f8fafc / #ffffff; and both pickers persist across a
+reload.
+
 ## Working notes
 
 - Next.js 16 differs from older training data — read `node_modules/next/dist/docs/` before
